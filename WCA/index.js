@@ -1,5 +1,6 @@
 const { Client, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const { dataType } = require("./utils");
 
 const client = new Client();
 
@@ -12,7 +13,7 @@ client.on('qr', qr => {
 });
 
 client.initialize();
-
+global.client = client;
 
 async function event() {
   client.on('message_create', message => {
@@ -22,8 +23,23 @@ async function event() {
 };
 
 async function sendMessage(body, chatID, replyMessage, attachment) {
-  client.sendMessage(chatID, body);
-  if (replyMessage) {
-    replyMessage(body);
-  }
+	let media;
+	if (dataType(attachment) === "url") {
+		media = await MessageMedia.fromUrl(attachment);
+	} else {
+		media = await MessageMedia.fromFilePath(attachment);
+	}
+	if (attachment) {
+		await client.sendMessage(chatID, media, { caption: body ? body : "" });
+	}
+         await client.sendMessage(chatID, body);
+        if (replyMessage) {
+               await replyMessage(body);
+	}
 };
+
+
+module.exports = {
+	event,
+	sendMessage
+}
