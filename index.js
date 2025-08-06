@@ -19,7 +19,7 @@ const client = new Client({
 
 client.initialize();
 
-let pairingCodeRequested = true;
+let pairingCodeRequested = false;
 
 client.on('qr', async (qr) => {
     if (!pairingCodeRequested) {
