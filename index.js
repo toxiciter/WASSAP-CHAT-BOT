@@ -14,6 +14,8 @@ const client = new Client({
     }
 });
 
+client.initialize();
+
 /*const client = new Client({
     puppeteer: {
         args: ['--no-sandbox', '--disable-setuid-sandbox']
@@ -58,7 +60,6 @@ client.on('pairing_code', (code) => {
     console.log('[ CLIENT ]: Pairing Code:', code);
 });
 
-client.initialize();
 
 function onEvent(message) {
     console.log('[CUSTOM EVENT] Message received:', message.body);
