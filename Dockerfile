@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Install dependencies for puppeteer
+# Install Puppeteer dependencies (includes libgbm1)
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -19,27 +19,18 @@ RUN apt-get update && apt-get install -y \
     libxdamage1 \
     libxrandr2 \
     libdrm2 \
+    libgbm1 \
     xdg-utils \
     --no-install-recommends && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files
 COPY package*.json ./
-
-# Install Node.js dependencies
 RUN npm install
 
-# Copy all source files
 COPY . .
 
-# Expose port (optional)
 EXPOSE 3000
 
-
-
-# Start command
 CMD ["node", "index.js"]
