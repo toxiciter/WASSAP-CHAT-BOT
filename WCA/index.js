@@ -1,7 +1,6 @@
 const { Client, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const { dataType } = require("./utils");
-let event;
 const client = new Client();
 
 client.on('qr', qr => {
@@ -13,7 +12,6 @@ client.on('ready', () => {
 });
 
 function onEvent(message) {
-	event = message;
     console.log('[CUSTOM EVENT] Message received:', message.body);
 
     // Example 1: Auto-reply
@@ -73,7 +71,7 @@ async function sendMessage(msg, chatID, replyToMessage) {
         }
 
         if (replyToMessage) {
-            await event.reply(body);
+            //await event.reply(body);
         }
 
     } catch (err) {
