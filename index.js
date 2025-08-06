@@ -40,7 +40,7 @@ client.on('ready', async () => {
 client.on('qr', qr => {
     console.log('[ QR Code ] Scan this:');
     qrcode.generate(qr, { small: true });
-})!
+});
 
 client.on('authenticated', () => {
     console.log('[ CLIENT ]: Authenticated');
