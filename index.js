@@ -14,9 +14,33 @@ const client = new Client({
     }
 });
 
-client.on('ready', () => {
+/*const client = new Client({
+    puppeteer: {
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }
+});*/
+
+let pairingCodeRequested = false;
+
+client.on('ready', async () => {
     console.log('[ CLIENT ]: Client is ready!');
+
+    // Pairing Code এখানে চাও
+    if (!pairingCodeRequested) {
+        try {
+            const code = await client.requestPairingCode('01843152929');
+            console.log('[ ✅ Pairing Code ]:', code);
+            pairingCodeRequested = true;
+        } catch (err) {
+            console.error('[ ❌ Pairing Code Error ]:', err.message);
+        }
+    }
 });
+
+client.on('qr', qr => {
+    console.log('[ QR Code ] Scan this:');
+    qrcode.generate(qr, { small: true });
+})!
 
 client.on('authenticated', () => {
     console.log('[ CLIENT ]: Authenticated');
