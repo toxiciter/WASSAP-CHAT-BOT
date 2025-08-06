@@ -1,34 +1,45 @@
 const { Client, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const { dataType } = require("./utils");
+
 const client = new Client({
+    authStrategy: new LocalAuth(), // use this for session management
+    webVersionCache: {
+        type: 'remote',
+        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2412.54.html'
+    },
     puppeteer: {
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        headless: true
     }
-});
-
-let pairingCodeRequested = false;
-client.on('qr', async (qr) => {
-    // NOTE: This event will not be fired if a session is specified.
-    console.log('QR RECEIVED', qr);
-
-    // paiuting code example
-    const pairingCodeEnabled = true;
-    if (pairingCodeEnabled && !pairingCodeRequested) {
-        const pairingCode = await client.requestPairingCode('01843152929'); // enter the target phone number
-        console.log('Pairing code enabled, code: '+ pairingCode);
-        pairingCodeRequested = true;
-    }
-});
-
-client.on('qr', qr => {
-    qrcode.generate(qr, { small: true });
 });
 
 client.on('ready', () => {
     console.log('[ CLIENT ]: Client is ready!');
 });
 
+client.on('authenticated', () => {
+    console.log('[ CLIENT ]: Authenticated');
+});
+
+client.on('auth_failure', () => {
+    console.error('[ CLIENT ]: Auth Failed');
+});
+
+client.on('disconnected', () => {
+    console.log('[ CLIENT ]: Client disconnected');
+});
+
+client.on('pairing_code', (code) => {
+    console.log('[ CLIENT ]: Pairing Code:', code);
+});
+
+client.initialize();
+
+(async () => {
+    const pairingCode = await client.requestPairingCode('01843152929');
+    console.log('[ CLIENT ]: Pairing code is', pairingCode);
+})();
 
 function onEvent(message) {
     console.log('[CUSTOM EVENT] Message received:', message.body);
