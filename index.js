@@ -1,4 +1,4 @@
-const { Client, Location, Poll, List, Buttons, LocalAuth } = require('./index');
+const { Client, Location, Poll, List, Buttons, LocalAuth } = require('whatsapp-web.js');
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -15,7 +15,10 @@ const client = new Client({
      */
     // browserName: 'Firefox',
     puppeteer: { 
-        // args: ['--proxy-server=proxy-server-that-requires-authentication.example.com'],
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+            ],
         headless: false,
     }
 });
