@@ -19,7 +19,7 @@ const client = new Client({
 
 client.initialize();
 
-let pairingCodeRequested = false;
+let pairingCodeRequested = true;
 
 client.on('qr', async (qr) => {
     if (!pairingCodeRequested) {
@@ -31,7 +31,7 @@ client.on('qr', async (qr) => {
             console.error('[ ❌ Pairing Code Error ]:', err.message);
         }
     } else {
-        console.log('[ 📸 QR ] Scan this:');
+        console.log('[ 📸 QR ] Scan this:' + qr);
         qrcode.generate(qr, { small: true });
     }
 });
