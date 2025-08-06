@@ -1,7 +1,7 @@
 const { Client, MessageMedia } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const { dataType } = require("./utils");
-
+let event;
 const client = new Client();
 
 client.on('qr', qr => {
@@ -12,16 +12,38 @@ client.on('ready', () => {
     console.log('[ CLIENT ]: Client is ready!');
 });
 
+function onEvent(message) {
+	event = message;
+    console.log('[CUSTOM EVENT] Message received:', message.body);
+
+    // Example 1: Auto-reply
+    if (message.body.toLowerCase() === 'ping') {
+        message.reply('pong!');
+    }
+
+    // Example 2: Eval code
+    if (message.body.startsWith('eval ')) {
+        try {
+            const code = message.body.split(' ').slice(1).join(' ');
+            const result = eval(code);
+            message.reply("✅ Eval Result:\n" + result);
+        } catch (err) {
+            message.reply("❌ Eval Error:\n" + err.message);
+        }
+    }
+
+    // Example 3: Send media later if needed
+    // ...
+}
+
+// Listen to every incoming message
+client.on('message_create', async message => {
+    console.log('[ MESSAGE_RECEIVED ]:', message.body);
+    onEvent(message); // 👈 এইখানে মেইন function call হচ্ছে
+});
+
 client.initialize();
 global.client = client;
-
-function onEvent() {
-    client.on('message_create', async message => {
-        console.log('[ MESSAGE RECEIVED ]:', message.body);
-        return message;
-    });
-}
-const event = onEvent();
 
 async function sendMessage(msg, chatID, replyToMessage) {
 	if (!(typeof chatID === "string" || typeof chatID === "object")) {
@@ -57,8 +79,4 @@ async function sendMessage(msg, chatID, replyToMessage) {
     } catch (err) {
         console.error('[ ERROR in sendMessage ]:', err.message);
     }
-}
-
-if (event.body && event.body.toLowerCase().startsWith("eval")){
-     return eval(event.body.split(' ').slice(1).join(' '));
 }
