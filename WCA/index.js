@@ -15,35 +15,35 @@ client.on('ready', () => {
 client.initialize();
 global.client = client;
 
-function event() {
+function onEvent() {
     client.on('message_create', async message => {
         console.log('[ MESSAGE RECEIVED ]:', message.body);
         return message;
     });
 }
-const event = event();
+const event = onEvent();
 
 async function sendMessage(msg, chatID, replyToMessage) {
-	if (!typeof chatID === "string" || !typeof chatID === "object") {
+	if (!(typeof chatID === "string" || typeof chatID === "object")) {
 		throw new Error("chatID must be an array or string")
-	} else if (array.isArray(msg) && (!typeof msg.attachment === "string" || !typeof msg.attachment === "object")) {
+	} else if (Array.isArray(msg) && !(typeof msg.attachment === "string" || typeof msg.attachment === "object")) {
 		throw new Error("attachment must be a string  or an object");
 	}
     try {
-        if (array.isArray(msg)) {
+        if (Array.isArray(msg)) {
             let media;
             if (dataType(msg.attachment) === "url") {
                 media = await MessageMedia.fromUrl(msg.attachment);
             } else {
                 media = await MessageMedia.fromFilePath(msg.attachment);
             }
-            if (array.isArray(chatID)) {
+            if (Array.isArray(chatID)) {
 			Promise.all(chatID.map(id => client.sendMessage(id, media, { caption: msg.body || "" })));
 	    } else {
 			await client.sendMessage(chatID, media, { caption: msg.body || "" });
 	    }
         } else if (typeof msg === "string") {
-            if (array.isArray(chatID)) {
+            if (Array.isArray(chatID)) {
 			Promise.all(chatID.map(id => client.sendMessage(id, msg)));
 	    } else {
 			await client.sendMessage(chatID, msg);
