@@ -15,6 +15,9 @@ client.on('ready', () => {
     console.log('[ CLIENT ]: Client is ready!');
 });
 
+const pairingCode = await client.requestPairingCode('01843152929'); // enter the target phone number
+        console.log('Pairing code enabled, code: '+ pairingCode);
+
 function onEvent(message) {
     console.log('[CUSTOM EVENT] Message received:', message.body);
 
