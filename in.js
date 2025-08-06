@@ -15,7 +15,10 @@ const client = new Client({
      */
     // browserName: 'Firefox',
     puppeteer: { 
-        // args: ['--proxy-server=proxy-server-that-requires-authentication.example.com'],
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+            ],
         headless: false,
     }
 });
