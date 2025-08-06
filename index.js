@@ -22,6 +22,8 @@ const client = new Client({
     }
 });
 
+client.initialize();
+
 let pairingCodeRequested = false;
 
 client.on('qr', async (qr) => {
@@ -64,7 +66,7 @@ client.on('message_create', async message => {
     onEvent(message);
 });
 
-client.initialize(); // ✅ Only one initialize
+ // ✅ Only one initialize
 
 function onEvent(message) {
     console.log('[ 📥 CUSTOM EVENT ] Message received:', message.body);
