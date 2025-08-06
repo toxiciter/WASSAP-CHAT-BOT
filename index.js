@@ -19,41 +19,46 @@ const client = new Client({
 
 client.initialize();
 
-let pairingCodeRequested = false;
+client.on('loading_screen', (percent, message) => {
+    console.log('LOADING SCREEN', percent, message);
+});
 
+// Pairing code only needs to be requested once
+let pairingCodeRequested = false;
 client.on('qr', async (qr) => {
-    if (!pairingCodeRequested) {
-        try {
-            const code = await client.requestPairingCode('01843152929');
-            console.log('[ 🔑 Pairing Code ]:', code);
-            pairingCodeRequested = true;
-        } catch (err) {
-            console.error('[ ❌ Pairing Code Error ]:', err.message);
-        }
-    } else {
-        console.log('[ 📸 QR ] Scan this:' + qr);
-        qrcode.generate(qr, { small: true });
+    // NOTE: This event will not be fired if a session is specified.
+    console.log('QR RECEIVED', qr);
+
+    // paiuting code example
+    const pairingCodeEnabled = true;
+    if (pairingCodeEnabled && !pairingCodeRequested) {
+        const pairingCode = await client.requestPairingCode('01843152929'); // enter the target phone number
+        console.log('Pairing code enabled, code: '+ pairingCode);
+        pairingCodeRequested = true;
     }
 });
 
-client.on('ready', () => {
-    console.log('[ ✅ CLIENT ] Ready');
-});
-
 client.on('authenticated', () => {
-    console.log('[ 🔐 CLIENT ] Authenticated');
+    console.log('AUTHENTICATED');
 });
 
-client.on('auth_failure', () => {
-    console.error('[ ❌ CLIENT ] Auth Failed');
+client.on('auth_failure', msg => {
+    // Fired if session restore was unsuccessful
+    console.error('AUTHENTICATION FAILURE', msg);
 });
 
-client.on('disconnected', () => {
-    console.log('[ 🔌 CLIENT ] Disconnected');
-});
+client.on('ready', async () => {
+    console.log('READY');
+    const debugWWebVersion = await client.getWWebVersion();
+    console.log(`WWebVersion = ${debugWWebVersion}`);
 
-client.on('pairing_code', (code) => {
-    console.log('[ 🔑 EVENT ] Pairing Code:', code);
+    client.pupPage.on('pageerror', function(err) {
+        console.log('Page error: ' + err.toString());
+    });
+    client.pupPage.on('error', function(err) {
+        console.log('Page error: ' + err.toString());
+    });
+    
 });
 
 client.on('message_create', async message => {
