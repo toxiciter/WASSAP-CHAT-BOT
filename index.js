@@ -60,11 +60,6 @@ client.on('pairing_code', (code) => {
 
 client.initialize();
 
-(async () => {
-    const pairingCode = await client.requestPairingCode('01843152929');
-    console.log('[ CLIENT ]: Pairing code is', pairingCode);
-})();
-
 function onEvent(message) {
     console.log('[CUSTOM EVENT] Message received:', message.body);
 
