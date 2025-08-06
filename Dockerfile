@@ -1,6 +1,6 @@
 FROM node:18-slim
 
-# Install dependencies for Puppeteer
+# Install dependencies for puppeteer
 RUN apt-get update && apt-get install -y \
     wget \
     ca-certificates \
@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
     libxcomposite1 \
     libxdamage1 \
     libxrandr2 \
+    libdrm2 \
     xdg-utils \
     --no-install-recommends && \
     apt-get clean && \
@@ -26,15 +27,19 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy package files and install
+# Copy package files
 COPY package*.json ./
+
+# Install Node.js dependencies
 RUN npm install
 
-# Copy rest of the files
+# Copy all source files
 COPY . .
 
-# Expose port (optional, if you're using express or something)
+# Expose port (optional)
 EXPOSE 3000
+
+
 
 # Start command
 CMD ["node", "index.js"]
