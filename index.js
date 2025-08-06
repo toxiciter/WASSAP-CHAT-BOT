@@ -7,6 +7,20 @@ const client = new Client({
     }
 });
 
+let pairingCodeRequested = false;
+client.on('qr', async (qr) => {
+    // NOTE: This event will not be fired if a session is specified.
+    console.log('QR RECEIVED', qr);
+
+    // paiuting code example
+    const pairingCodeEnabled = true;
+    if (pairingCodeEnabled && !pairingCodeRequested) {
+        const pairingCode = await client.requestPairingCode('01843152929'); // enter the target phone number
+        console.log('Pairing code enabled, code: '+ pairingCode);
+        pairingCodeRequested = true;
+    }
+});
+
 client.on('qr', qr => {
     qrcode.generate(qr, { small: true });
 });
@@ -16,12 +30,6 @@ client.on('ready', () => {
 });
 
 
-async function pairCode() {
-const pairingCode = await client.requestPairingCode('01843152929'); // enter the target phone number
-        console.log('Pairing code enabled, code: '+ pairingCode);
-}
-
-pairCode()
 function onEvent(message) {
     console.log('[CUSTOM EVENT] Message received:', message.body);
 
