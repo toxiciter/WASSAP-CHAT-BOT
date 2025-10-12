@@ -28,7 +28,7 @@ client.on('qr', async (qr) => {
 
   try {
     // QR কোড ইমেজ ডাউনলোড করা
-    const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponant(qr)}`, { responseType: "stream" });
+    const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponent(qr)}`, { responseType: "stream" });
     const qrPath = path.join(__dirname, "public", "qr.png");
     const writer = fs.createWriteStream(qrPath);
     data.pipe(writer);
