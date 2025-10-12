@@ -15,9 +15,19 @@ module.exports = (event, client) => {
         if (Array.isArray(msg)) {
             if (Array.isArray(msg.attachment)) {
                 if (dataType(msg.attachment) === "url") {
-                    await Promise.all(msg.attachment.map(url => MessageMedia.fromUrl(url).map(media => client.sendMessage(chatID, media, { caption: msg.body || "", quotedMessageId: messageReply || "" }))));
+                    await Promise.all(
+                        msg.attachment.map(async url => {
+                            const media = await MessageMedia.fromUrl(url);
+                            await client.sendMessage(chatID, media, { caption: msg.body || "", quotedMessageId: messageReply || "" });
+                        })
+                    );
                 } else {
-                    await Promise.all(msg.attachment.map(file => MessageMedia.fromFilePath(file).map(media => client.sendMessage(chatID, media, { caption: msg.body || "", quotedMessageId: messageReply || "" }))));
+                    await Promise.all(
+                        msg.attachment.map(async file => {
+                            const media = await MessageMedia.fromFilePath(file);
+                            await client.sendMessage(chatID, media, { caption: msg.body || "", quotedMessageId: messageReply || "" });
+                        })
+                    );
                 }
             } else {
                 let media;        
