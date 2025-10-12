@@ -1,1 +1,43 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatsApp QR WebUI</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:24px;background:#f7f7f8}
+    .card{background:#fff;padding:18px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.06);max-width:720px;margin:0 auto}
+    img{max-width:320px;width:100%;height:auto}
+    pre{background:#f0f0f0;padding:10px;border-radius:6px;overflow:auto}
+    .status{margin-top:12px;font-weight:600}
+    .small{font-size:13px;color:#555}
+    button{padding:8px 12px;border-radius:6px;border:none;background:#1b74e4;color:white;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>WhatsApp QR WebUI</h2>
+    <p class="small">এখানে QR স্ক্যান করলে তুমি WhatsApp Web session তৈরি করতে পারবে।</p>
 
+    <div id="qr-wrap">
+      <p class="small">অপেক্ষা করা হচ্ছে QR-এর জন্য...</p>
+    </div>
+
+    <div class="status" id="status">Status: <span id="status-text">--</span></div>
+    <div class="small" id="loading"></div>
+
+    <h4 style="margin-top:14px">Debug / Raw QR text</h4>
+    <pre id="qr-text">--</pre>
+
+    <div style="margin-top:12px">
+      <button id="restart">Reload Puppeteer Page</button>
+    </div>
+
+    <p class="small" style="margin-top:10px">Open <strong>http://localhost:3000</strong> and scan QR with WhatsApp on your phone.</p>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
