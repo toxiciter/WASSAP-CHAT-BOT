@@ -2,7 +2,7 @@ const { MessageMedia } = require('whatsapp-web.js');
 const { dataType } = require("./utils.js")
 
 module.exports = (event, client) => {
-    return (msg, chatID, replyToMessage) => {
+    return async (msg, chatID, replyToMessage) => {
     if (!(typeof chatID === "string" || typeof chatID === "object")) {
         throw new Error("chatID must be an array or string");
     }
