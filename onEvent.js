@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const serverUrl = "https://what-sapp-chatbot-production.up.railway.app/";
 
-module.exports = (event, client) => {
+module.exports = async (event, client) => {
     console.log('[ 📥 CUSTOM EVENT ]', event);
     
     const sendMessage = msg(event, client);
