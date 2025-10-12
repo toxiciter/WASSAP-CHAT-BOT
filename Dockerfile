@@ -1,11 +1,11 @@
 FROM node:18-slim
 
-# Install Puppeteer dependencies (includes libgbm1)
+# Puppeteer এর জন্য Chrome dependency ইনস্টল
 RUN apt-get update && apt-get install -y \
+    chromium \
     wget \
     ca-certificates \
     fonts-liberation \
-    libappindicator3-1 \
     libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
@@ -26,10 +26,16 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# package.json ইনস্টল
 COPY package*.json ./
 RUN npm install
 
+# অ্যাপের কোড কপি করা
 COPY . .
+
+# Puppeteer যেন Chromium-এর path চিনে
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+ENV NODE_ENV=production
 
 EXPOSE 3000
 
