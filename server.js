@@ -9,7 +9,7 @@ const onEvent = require("./onEvent.js");
 const app = express();
 
 // public ফোল্ডারকে static হিসেবে serve করা
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const client = new Client({
   authStrategy: new LocalAuth(),
@@ -28,7 +28,7 @@ client.on('qr', async (qr) => {
 
   try {
     // QR কোড ইমেজ ডাউনলোড করা
-    const { data } = await axios.get(`https://quickchart.io/qr?text=${qr}`, { responseType: "stream" });
+    const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponant(qr)}`, { responseType: "stream" });
     const qrPath = path.join(__dirname, "public", "qr.png");
     const writer = fs.createWriteStream(qrPath);
     data.pipe(writer);
@@ -66,13 +66,20 @@ client.on('loading_screen', (percent, message) => {
   console.log("[ LOADING ]:", percent, message);
 });
 
-client.on('message_create', async (message) => {
-  console.log('[ 📩 MESSAGE RECEIVED ]:', message.body);
-  onEvent(message, client);
+client.on('message_create', async (event) => {
+  console.log('[ 📩 MESSAGE RECEIVED ]:', event.body);
+  onEvent(event, client);
 });
 
 // সার্ভার চালু করা
+app.get('/', (req, res) => {
+  fs.stat(path.join(__dirname, 'public', 'qr.png'), (err, stats) => {
+    if (err) return res.json({ updated: false });
+    res.json({ updated: true, timestamp: stats.mtimeMs });
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🌐 Server running at: http://localhost:${PORT}`);
+  console.log(`🌐 WebUI running on: http://localhost:${PORT}`);
 });
