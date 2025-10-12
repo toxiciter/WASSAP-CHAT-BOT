@@ -2,7 +2,7 @@ const { MessageMedia } = require('whatsapp-web.js');
 const { dataType } = require("./utils.js")
 
 module.exports = (event, client) => {
-    return async (msg, chatID, replyToMessage) => {
+    return async (msg, chatID, messageReply) => {
     if (!(typeof chatID === "string" || typeof chatID === "object")) {
         throw new Error("chatID must be an array or string");
     }
@@ -13,22 +13,30 @@ module.exports = (event, client) => {
 
     try {
         if (Array.isArray(msg)) {
-            let media;
-            if (dataType(msg.attachment) === "url") {
-                media = await MessageMedia.fromUrl(msg.attachment);
+            if (Array.isArray(msg.attachment)) {
+                if (dataType(msg.attachment) === "url") {
+                    await Promise.all(msg.attachment.map(url => MessageMedia.fromUrl(url).map(media => client.sendMessage(chatID, media, { caption: msg.body || "", quotedMessageId: messageReply || "" }))));
+                } else {
+                    await Promise.all(msg.attachment.map(file => MessageMedia.fromFilePath(file).map(media => client.sendMessage(chatID, media, { caption: msg.body || "", quotedMessageId: messageReply || "" }))));
+                }
             } else {
-                media = await MessageMedia.fromFilePath(msg.attachment);
-            }
-            if (Array.isArray(chatID)) {
-                await Promise.all(chatID.map(id => client.sendMessage(id, media, { caption: msg.body || "" })));
-            } else {
-                await client.sendMessage(chatID, media, { caption: msg.body || "" });
+                let media;        
+                if (dataType(msg.attachment) === "url") {         
+                    media = await MessageMedia.fromUrl(msg.attachment);      
+                } else {            
+                    media = await MessageMedia.fromFilePath(msg.attachment);         
+                }
+                if (Array.isArray(chatID)) {
+                    await Promise.all(chatID.map(id => client.sendMessage(id, media, { caption: msg.body || "" })));
+                } else {
+                    await client.sendMessage(chatID, media, { caption: msg.body || "", quotedMessageId: messageReply || "" });            
+                } 
             }
         } else if (typeof msg === "string") {
             if (Array.isArray(chatID)) {
                 await Promise.all(chatID.map(id => client.sendMessage(id, msg)));
             } else {
-                await client.sendMessage(chatID, msg);
+                await client.sendMessage(chatID, msg, { quotedMessageId: messageReply || "" });
             }
         }
 
