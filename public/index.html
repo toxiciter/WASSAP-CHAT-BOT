@@ -1,43 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WhatsApp QR WebUI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp QR Login</title>
   <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:24px;background:#f7f7f8}
-    .card{background:#fff;padding:18px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.06);max-width:720px;margin:0 auto}
-    img{max-width:320px;width:100%;height:auto}
-    pre{background:#f0f0f0;padding:10px;border-radius:6px;overflow:auto}
-    .status{margin-top:12px;font-weight:600}
-    .small{font-size:13px;color:#555}
-    button{padding:8px 12px;border-radius:6px;border:none;background:#1b74e4;color:white;cursor:pointer}
+    body {
+      background: #0e1117;
+      color: #eee;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    img {
+      width: 280px;
+      height: 280px;
+      border: 4px solid #00ff80;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ff80aa;
+    }
+    h2 {
+      margin-top: 20px;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>WhatsApp QR WebUI</h2>
-    <p class="small">এখানে QR স্ক্যান করলে তুমি WhatsApp Web session তৈরি করতে পারবে।</p>
+  <h1>📱 WhatsApp Web QR</h1>
+  <img id="qr" src="qr.png" alt="QR Code">
+  <h2>স্ক্যান করো তোমার WhatsApp দিয়ে</h2>
 
-    <div id="qr-wrap">
-      <p class="small">অপেক্ষা করা হচ্ছে QR-এর জন্য...</p>
-    </div>
-
-    <div class="status" id="status">Status: <span id="status-text">--</span></div>
-    <div class="small" id="loading"></div>
-
-    <h4 style="margin-top:14px">Debug / Raw QR text</h4>
-    <pre id="qr-text">--</pre>
-
-    <div style="margin-top:12px">
-      <button id="restart">Reload Puppeteer Page</button>
-    </div>
-
-    <p class="small" style="margin-top:10px">Open <strong>http://localhost:3000</strong> and scan QR with WhatsApp on your phone.</p>
-
-  </div>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="client.js"></script>
+  <script>
+    // প্রতি 5 সেকেন্ডে চেক করবে নতুন QR এসেছে কিনা
+    let lastUpdate = 0;
+    async function checkQR() {
+      const res = await fetch('/qr-updated');
+      const data = await res.json();
+      if (data.timestamp && data.timestamp !== lastUpdate) {
+        lastUpdate = data.timestamp;
+        document.getElementById('qr').src = 'qr.png?t=' + Date.now();
+      }
+    }
+    setInterval(checkQR, 5000);
+  </script>
 </body>
 </html>
