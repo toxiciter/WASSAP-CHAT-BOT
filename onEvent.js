@@ -2,6 +2,7 @@ const msg = require("./sendMessage.js")
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const serverUrl = "https://what-sapp-chatbot-production.up.railway.app/";
 
 module.exports = (event, client) => {
     console.log('[ 📥 CUSTOM EVENT ]', event);
@@ -21,34 +22,34 @@ module.exports = (event, client) => {
             event.reply("❌ Eval Error:\n" + err.message);
         }
     }
-
+ 
     if (event.body.startsWith("edit")) {
-  try {
-  const prompt = event.body.split(' ').slice(1).join(' ');
-  if (!prompt) {
-   await sendMessage("Please provide a prompt with an image...!!", event.from, event.id._serialized);
-  } else if (event.hasMedia) {
-    const media = await event.downloadMedia();
-    const fileName = media.filename || "file_" + Date.now();
-    const imagePath = path.join(__dirname, "public", fileName);
-    fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
-    const mediaUrl = serverUrl + fileName;
-    const { data } = await axios.get(`https://www.noobx.ct.ws/api/edit?url=${encodeURIComponent(mediaUrl)}&prompt=${encodeURIComponent(prompt)}`);
-    await sendMessage({ attachment: data.url, body: "Ei ne bukachuda...!!🥸"
-    }, event.from, event.id._serialized);
-  } else {
-      await sendMessage("Kire bukachuda pic ke dibe re bukachuda...!", event.from, event.id._serialized);
-   }
-  } catch (e) {
-    event.reply(e.message);
-  }
-} else if (event.body.startsWith("gpt")) {
-  try {
-  const prompt = event.body.split(' ').slice(1).join(' ') || "hey";
-  const { data } = await axios.get(`https://www.noobx.ct.ws/api/gpt?query=${encodeURIComponent(prompt)}&uid=${event.from}`);
-  event.reply(data.response);
-  } catch(e) {
-    event.reply(e.message)
-  }
+        try {
+            const prompt = event.body.split(' ').slice(1).join(' ');
+            if (!prompt) {
+                await sendMessage("Please provide a prompt with an image...!!", event.from, event.id._serialized);
+            } else if (event.hasMedia) {
+                const media = await event.downloadMedia();
+                const fileName = media.filename || "file_" + Date.now();
+                const imagePath = path.join(__dirname, "public", fileName);
+                fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
+                const mediaUrl = serverUrl + fileName;
+                const { data } = await axios.get(`https://www.noobx.ct.ws/api/edit?url=${encodeURIComponent(mediaUrl)}&prompt=${encodeURIComponent(prompt)}`);
+                await sendMessage({ attachment: data.url, body: "Ei ne bukachuda...!!🥸"
+                                  }, event.from, event.id._serialized);
+            } else {
+                await sendMessage("Kire bukachuda pic ke dibe re bukachuda...!", event.from, event.id._serialized);
+            }
+        } catch (e) {
+            event.reply(e.message);
+        }
+    } else if (event.body.startsWith("gpt")) { 
+        try { 
+            const prompt = event.body.split(' ').slice(1).join(' ') || "hey";
+            const { data } = await axios.get(`https://www.noobx.ct.ws/api/gpt?query=${encodeURIComponent(prompt)}&uid=${event.from}`);
+            event.reply(data.response);
+        } catch(e) {  
+            event.reply(e.message)
+        }
     }
 }
