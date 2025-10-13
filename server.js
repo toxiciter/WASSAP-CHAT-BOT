@@ -13,7 +13,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter").then(() => {
     const store = new MongoStore({ mongoose: mongoose });
-
     const client = new Client({
         authStrategy: new RemoteAuth({
             store: store,
@@ -32,8 +31,8 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
             ]
         }
     });
-    client.initialize();   
-});
+
+    client.initialize();
 
 client.on('qr', async (qr) => {
   console.log('[ QR RECEIVED ]:', qr);
@@ -69,6 +68,7 @@ client.on('loading_screen', (percent, message) => {
   console.log("[ LOADING ]:", percent, message);
 });
 
+
 client.on('message_create', async (event) => {
   console.log("body:", event.body);
   console.log("from:", event.from);
@@ -76,6 +76,7 @@ client.on('message_create', async (event) => {
   console.log("messageID:", event.id._serialized);
   console.log("hasMedia:", event.hasMedia);
   onEvent(event, client);
+});
 });
 
 
