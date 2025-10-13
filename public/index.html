@@ -45,7 +45,7 @@
   <script>
     let lastUpdate = 0;
     async function checkQR() {
-      const res = await fetch('/qr-updated');
+      const res = await fetch('/qr');
       const data = await res.json();
       if (data.timestamp && data.timestamp !== lastUpdate) {
         lastUpdate = data.timestamp;
