@@ -12,6 +12,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter").then(() => {
+    console.log("[ MONGODB ]:", "connected");
     const store = new MongoStore({ mongoose: mongoose });
     const client = new Client({
         authStrategy: new RemoteAuth({
@@ -70,12 +71,8 @@ client.on('loading_screen', (percent, message) => {
 
 
 client.on('message_create', async (event) => {
-  console.log("body:", event.body);
-  console.log("from:", event.from);
-  console.log("to:", event.to);
-  console.log("messageID:", event.id._serialized);
-  console.log("hasMedia:", event.hasMedia);
-  onEvent(event, client);
+    onEvent(event, client);
+    console.log("[ EVENT ]:", event);
 });
 });
 
@@ -89,5 +86,5 @@ app.get('/qr', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🌐 WebUI running on: http://localhost:${PORT}`);
+  console.log(`running on: http://localhost:${PORT}`);
 });
