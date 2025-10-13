@@ -1,4 +1,5 @@
-const msg = require("./sendMessage.js")
+const msg = require("./sendMessage.js");
+const { getMediaUrl } = require("./utils.js");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
@@ -42,9 +43,12 @@ module.exports = async (event, client) => {
             event.reply(e.message);
         }
     } else if (event.body.toLowerCase().startsWith("gpt")) { 
-        try { 
+        try {
+            if (event.hasMedia) {
+               const url = await getMediaUrl(event);
+            }
             const prompt = event.body.split(' ').slice(1).join(' ') || "hey";
-            const { data } = await axios.get(`https://www.noobx.ct.ws/api/gpt?query=${encodeURIComponent(prompt)}&uid=${event.from}`);
+            const { data } = await axios.get(`https://www.noobx.ct.ws/api/gpt-pro?text=${encodeURIComponent(prompt)}&uid=${event.from}&imageUrl=${url}`);
             event.reply(data.response);
         } catch(e) {  
             event.reply(e.message)
