@@ -2,7 +2,7 @@ const msg = require("./sendMessage.js")
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
-const serverUrl = "https://wp-chat-bot.onrender.com/";
+const serverUrl = "https://wassap-chat-bot.onrender.com/";
 
 module.exports = async (event, client) => {
     const sendMessage = msg(event, client);
