@@ -2,17 +2,25 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { Client, LocalAuth } = require('whatsapp-web.js');
 const { dataType } = require("./utils");
 const onEvent = require("./onEvent.js");
+const { Client, RemoteAuth } = require('whatsapp-web.js');
+const { MongoStore } = require('wwebjs-mongo');
+const mongoose = require('mongoose');
 
+mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter").then(() => {
+    const store = new MongoStore({ mongoose: mongoose });
+});
+  
 const app = express();
 
-// public ফোল্ডারকে static হিসেবে serve করা
 app.use(express.static(path.join(__dirname, 'public')));
 
 const client = new Client({
-  //authStrategy: new LocalAuth(),
+  authStrategy: new RemoteAuth({
+            store: store,
+            backupSyncIntervalMs: 300000
+        }),
   puppeteer: {
   headless: true,
   args: [
