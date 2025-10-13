@@ -15,7 +15,8 @@
     "express": "^4.21.1",
     "axios": "^1.7.4",
     "url": "^0.11.4",
-    "wwebjs-mongo": "^1.1.0"
+    "wwebjs-mongo": "^1.1.0",
+    "mongoose": "^8.5.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
