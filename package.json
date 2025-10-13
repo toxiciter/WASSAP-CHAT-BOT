@@ -11,12 +11,15 @@
   "author": "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
   "license": "MIT",
   "dependencies": {
-    "whatsapp-web.js": "^1.31.0",
-    "url": "^0.11.0",
-    "express": "^4.18.2",
-    "axios": "^1.12.2"
+    "whatsapp-web.js": "^1.34.1",
+    "express": "^4.21.1",
+    "axios": "^1.7.4",
+    "url": "^0.11.4"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

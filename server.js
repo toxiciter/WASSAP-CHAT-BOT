@@ -12,32 +12,27 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 const client = new Client({
-  authStrategy: new LocalAuth(),
+  //authStrategy: new LocalAuth(),
   puppeteer: {
-    headless: true,
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-extensions',
-      '--disable-gpu',
-      '--no-first-run',
-      '--no-zygote',
-      '--single-process'
-    ]
-  }
+  headless: true,
+  args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--disable-extensions',
+    '--no-first-run',
+    '--no-zygote'
+  ]
+ }
 });
 
 client.initialize();
-
-let pairingCodeRequested = false;
 
 client.on('qr', async (qr) => {
   console.log('[ QR RECEIVED ]:', qr);
 
   try {
-    // QR কোড ইমেজ ডাউনলোড করা
     const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponent(qr)}`, { responseType: "stream" });
     const qrPath = path.join(__dirname, "public", "qr.png");
     const writer = fs.createWriteStream(qrPath);
@@ -45,14 +40,6 @@ client.on('qr', async (qr) => {
 
     writer.on('finish', async () => {
       console.log('QR saved at:', qrPath);
-
-      // Pairing code সক্রিয় করা
-      const pairingCodeEnabled = true;
-      if (pairingCodeEnabled && !pairingCodeRequested) {
-        const pairingCode = await client.requestPairingCode('+8801843152929'); // এখানে তোমার ফোন নাম্বার দাও
-        console.log('Pairing code enabled, code:', pairingCode);
-        pairingCodeRequested = true;
-      }
     });
 
   } catch (error) {
@@ -77,11 +64,15 @@ client.on('loading_screen', (percent, message) => {
 });
 
 client.on('message_create', async (event) => {
-  console.log('[ 📩 MESSAGE RECEIVED ]:', event.body);
+  console.log("body:", event.body);
+  console.log("from:", event.from);
+  console.log("to:", event.to);
+  console.log("messageID:", event.id._serialized);
+  console.log("hasMedia:", event.hasMedia);
   onEvent(event, client);
 });
 
-// সার্ভার চালু করা
+
 app.get('/', (req, res) => {
   fs.stat(path.join(__dirname, 'public', 'qr.png'), (err, stats) => {
     if (err) return res.json({ updated: false });
