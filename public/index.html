@@ -22,19 +22,27 @@
       border-radius: 10px;
       box-shadow: 0 0 15px #00ff80aa;
     }
-    h2 {
-      margin-top: 20px;
-      font-weight: 500;
+    h3 {
+      color: #00ffff;
+      box-shadow: 0 0 15px #00ffffaa;
+    }
+    h1 {
+      color: #ff00ff;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+    h6 {
+      color: maroon;
     }
   </style>
 </head>
 <body>
-  <h1>📱 WhatsApp Web QR</h1>
-  <img id="qr" src="qr.png" alt="QR Code">
-  <h2>স্ক্যান করো তোমার WhatsApp দিয়ে</h2>
+  <h6>Author => ♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎</h6>
+  <h1>WHATSAPP CHATBOT</h1>
+  <img id="qr" src="qr.png" alt="QR CODE MISSING - ♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎">
+  <h3>Scene this QR code in your Whatsapp Account For login Whatsapp chatBot</h3>
+  
 
   <script>
-    // প্রতি 5 সেকেন্ডে চেক করবে নতুন QR এসেছে কিনা
     let lastUpdate = 0;
     async function checkQR() {
       const res = await fetch('/qr-updated');
