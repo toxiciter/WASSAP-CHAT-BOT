@@ -3,6 +3,7 @@ const { getMediaUrl } = require("./utils.js");
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const { MessageMedia } = require("whatsapp-web.js");
 const serverUrl = "https://wassap-chat-bot.onrender.com/";
 
 module.exports = async (event, client) => {
@@ -10,6 +11,9 @@ module.exports = async (event, client) => {
 
     if (event.body.toLowerCase() === 'ping') {
         event.reply('pong!');
+    } else if (event.body.toLowerCase() === 'send pic') {
+        const m = MessageMedia.fromUrl("https://www.noobx.ct.ws/hasan/hasan.jpg");
+        client.sendMessage(event.from, m);
     }
 
     if (event.body.toLowerCase().startsWith('eval')) {
@@ -28,11 +32,7 @@ module.exports = async (event, client) => {
             if (!prompt) {
                 await sendMessage("Please provide a prompt with an image...!!", event.from, event.id._serialized);
             } else if (event.hasMedia) {
-                const media = await event.downloadMedia();
-                const fileName = "file_" + Date.now() + ".jpg";
-                const imagePath = path.join(__dirname, "public", fileName);
-                fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
-                const mediaUrl = serverUrl + fileName;
+                const mediaUrl = await getMediaUrl(event);
                 const { data } = await axios.get(`https://www.noobx.ct.ws/api/edit?url=${encodeURIComponent(mediaUrl)}&prompt=${encodeURIComponent(prompt)}`);
                 await sendMessage({ attachment: data.url, body: "Ei ne bukachuda...!!🥸"
                                   }, event.from, event.id._serialized);
