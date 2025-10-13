@@ -3,17 +3,28 @@ const { URL } = require("url");
 const path = require("path");
 
 function dataType(input) {
-  try {
-    new URL(input);
-    return "url";
-  } catch (err) {}
-  
-  if (fs.existsSync(input)) {
-    return "file";
-  }
+    if (Array.isArray(input)) {
+        const allUrls = input.every(
+            item => typeof item === "string" && /^(https?:\/\/[^\s]+)$/i.test(item)
+        );
+        if (allUrls) return "url";
+        return "array";
+    }
 
-  return "unknown";
-};
+    if (input === null) return "null";
+    if (input instanceof Buffer) return "buffer";
+    if (typeof input === "object") return "object";
+    if (typeof input === "number") return "number";
+    if (typeof input === "boolean") return "boolean";
+
+    if (typeof input === "string") {
+        if (/^(https?:\/\/[^\s]+)$/i.test(input)) return "url";
+        if (/[\/\\]/.test(input)) return "path";
+        return "string";
+    }
+
+    return typeof input;
+}
 
 async function getMediaUrl(event) {
   try {
