@@ -7,35 +7,33 @@ const onEvent = require("./onEvent.js");
 const { Client, RemoteAuth } = require('whatsapp-web.js');
 const { MongoStore } = require('wwebjs-mongo');
 const mongoose = require('mongoose');
-
-mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter").then(() => {
-    const store = new MongoStore({ mongoose: mongoose });
-});
-  
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const client = new Client({
-  authStrategy: new RemoteAuth({
-            store: store,
-            backupSyncIntervalMs: 300000
-        }),
-  puppeteer: {
-  headless: true,
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--disable-extensions',
-    '--no-first-run',
-    '--no-zygote'
-  ]
- }
-});
+mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter").then(() => {
+    const store = new MongoStore({ mongoose: mongoose });
 
-client.initialize();
+    const client = new Client({
+        authStrategy: new RemoteAuth({
+            store: store,
+            backupSyncIntervalMs: 300000       
+        }),
+        puppeteer: {
+            headless: true,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',  
+                '--disable-gpu',
+                '--disable-extensions',
+                '--no-first-run',
+                '--no-zygote'
+            ]
+        }
+    });
+    client.initialize();   
+});
 
 client.on('qr', async (qr) => {
   console.log('[ QR RECEIVED ]:', qr);
