@@ -73,7 +73,7 @@ client.on('message_create', async (event) => {
 });
 
 
-app.get('/', (req, res) => {
+app.get('/qr', (req, res) => {
   fs.stat(path.join(__dirname, 'public', 'qr.png'), (err, stats) => {
     if (err) return res.json({ updated: false });
     res.json({ updated: true, timestamp: stats.mtimeMs });
