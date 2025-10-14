@@ -18,13 +18,13 @@ module.exports = async (event, client) => {
       const cmd = require(path.join(cmdsPath, file));
       if (cmd?.config?.name && typeof cmd.logic === "function") {
         commands.set(cmd.config.name.toLowerCase(), cmd);
-        console.log("Loaded command:", cmd.config.name);
+        console.log("[ COMMAND LOADED ]:", cmd.config.name);
       }
     }
   });
 
   try {
-    const { body, from } = event;
+    const { body, senderID, messageID } = event;
     if (!body.startsWith(prefix)) return;
 
     // 🔹 Check if message is a command
@@ -37,9 +37,9 @@ module.exports = async (event, client) => {
 
       if (!cmd) {
         return sendMessage(
-          "😿 I don't have any command like this: " + cmdName,
-          from,
-          event.id._serialized
+          "<3 I don't have the command: " + cmdName,
+          senderID,
+          messageID
         );
       }
 
@@ -49,7 +49,7 @@ module.exports = async (event, client) => {
     }
 
     if (event.hasQuotedMsg) {     
-      const Reply = await global.onReply.get(event.id._serialized);
+      const Reply = await global.onReply.get(event.messageID);
       if (Reply) {      
         const cmd = commands.get(Reply.cmdName);    
         if (cmd && typeof cmd.reply === "function") {       
