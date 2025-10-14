@@ -10,7 +10,8 @@ module.exports = {
 
   logic: async ({ api, args, event, cmdName }) => {
     const prompt = args.join(" ") || "hie";
-    const url = event.hasMedia ? await api.getMediaUrl(event) : "";
+    try {
+    const url = event.messageReply.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
 
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
@@ -22,11 +23,15 @@ module.exports = {
       cmdName,
       author: event.senderID
     });
+    } catch (e) {
+      throw new Error(e.message);
+    }
   },
 
   reply: async ({ api, event, cmdName }) => {
+    try {
     const prompt = event.body;
-    const url = event.hasMedia ? await api.getMediaUrl(event) : ""; // এখানে () মিসিং ছিল
+    const url = event.messageReply.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
 
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
@@ -38,5 +43,8 @@ module.exports = {
       cmdName,
       author: event.senderID
     });
+    } catch (e) {
+      throw new Error(e.message);
+    }
   }
 };
