@@ -20,7 +20,7 @@ module.exports = {
 			else if (typeof msg === "undefined")
 				msg = "undefined";
 
-			event.reply(msg);
+			api.sendMessage(msg, event.senderID, event.messageID);
 		}
 		function out(msg) {
 			output(msg);
