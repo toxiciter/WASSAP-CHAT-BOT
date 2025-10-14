@@ -28,7 +28,7 @@ function dataType(input) {
 
 async function getMediaUrl(event) {
   try {
-  const media = await event.downloadMedia();
+  const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();
   const fileName = "file_" + Date.now() + ".jpg";
   const imagePath = path.join(__dirname, "public", fileName);
   fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
