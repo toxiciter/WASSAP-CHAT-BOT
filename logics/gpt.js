@@ -16,11 +16,11 @@ module.exports = {
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
 
-    const msg = await api.sendMessage(data.response, event.from, event.id._serialized);
+    const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
 
     global.onReply.set(msg.id._serialized, {
       cmdName,
-      author: event.from
+      author: event.senderID
     });
   },
 
@@ -32,11 +32,11 @@ module.exports = {
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
 
-    const msg = await api.sendMessage(data.response, event.from, event.id._serialized);
+    const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
 
     global.onReply.set(msg.id._serialized, {
       cmdName,
-      author: event.from
+      author: event.senderID
     });
   }
 };
