@@ -78,12 +78,11 @@ client.on('loading_screen', (percent, message) => {
 
 
 client.on('message_create', async (event) => {
-    const custom = {
-        ...event,
+    const custom = Object.assign(event, {
         senderID: event.id.remote,
         messageID: event.id._serialized,
         message_reply: event.hasQuotedMsg
-    }
+    });
     try {
        await onEvent(custom, client);
     } catch (e) {
