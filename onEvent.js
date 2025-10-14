@@ -2,6 +2,13 @@ const fs = require("fs");
 const path = require("path");
 const msg = require("./sendMessage.js");
 const { getMediaUrl } = require("./utils.js");
+const {
+  smsboomber, edit, editpro, upscale_2, imgur,
+  dalle_3, imagine, imagine_2, art, img2img,
+  text2song, swap, tools, removebg, alldl,
+  prompt, prompt_2, gpt, flux, changebg, flag,
+  font, quiz, album, permission, xnxx, yt, tiktokVideo, grok
+      } = require(path.join(__dirname, "API", "hasan.js"));
 
 global.onReply = new Map();
 
@@ -9,9 +16,15 @@ module.exports = async (event, client) => {
   const sendMessage = msg(event, client);
   const prefix = "/";
   const commands = new Map();
-  const api = { sendMessage, getMediaUrl };
+  const api = {
+    sendMessage, getMediaUrl, smsboomber, edit, editpro, upscale_2, imgur,
+    dalle_3, imagine, imagine_2, art, img2img,
+    text2song, swap, tools, removebg, alldl,
+    prompt, prompt_2, gpt, flux, changebg, flag,
+    font, quiz, album, permission, xnxx, yt, tiktokVideo, grok 
+  };
 
-  // 🔹 Load all commands
+  // [ LOAD COMMAND ]
   const cmdsPath = path.join(__dirname, "logics");
   fs.readdirSync(cmdsPath).forEach(file => {
     if (file.endsWith(".js")) {
@@ -25,10 +38,9 @@ module.exports = async (event, client) => {
 
   try {
     const { body, senderID, messageID } = event;
-    //if (!body.startsWith(prefix)) return;
     if(!body) return;
 
-    // 🔹 Check if message is a command
+    // [ LOGIC ]
     if (body.startsWith(prefix)) {
       const withoutPrefix = body.slice(prefix.length).trim();
       const split = withoutPrefix.split(/\s+/);
@@ -43,12 +55,12 @@ module.exports = async (event, client) => {
           messageID
         );
       }
-
-      // Run command logic
       await cmd.logic({ api, event, args, cmdName });
       return;
     }
+    
 
+    //[ REPLY ]
     if (event.hasQuotedMsg) {
       const quoted = await event.getQuotedMessage();
       const Reply = global.onReply.get(quoted.id._serialized);
