@@ -81,7 +81,8 @@ client.on('message_create', async (event) => {
     const custom = Object.assign(event, {
         senderID: event.id.remote,
         messageID: event.id._serialized,
-        message_reply: event.hasQuotedMsg
+        message_reply: event.hasQuotedMsg,
+        messageReply: await event.getQuotedMessage()
     });
     try {
        await onEvent(custom, client);
