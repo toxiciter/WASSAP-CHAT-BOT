@@ -2,6 +2,29 @@ const fs = require("fs");
 const path = require("path");
 const msg = require("./sendMessage.js");
 const { getMediaUrl } = require("./utils.js");
+
+const wl = require(path.join(__dirname, "API", "models", "WhiteListed.js"));
+
+async function wlAdd(uid) {
+  const data = await wl.findOne() || await wl.create({});
+  if (!data.whitelisted.includes(uid)) {
+    data.whitelisted.push(uid);
+    await data.save();
+    console.log(`✅ Added: ${uid}`);
+  } else {
+    console.log("Already in whitelist!");
+  }
+}
+
+async function wlRemove(uid) {
+  const data = await wl.findOne();
+  if (!data) return console.log("No whitelist found!");
+  data.whitelisted = data.whitelisted.filter(x => x !== uid);
+  await data.save();
+  console.log(`❌ Removed: ${uid}`);
+                }
+
+
 const {
   smsboomber, edit, editpro, upscale_2, imgur,
   dalle_3, imagine, imagine_2, art, img2img,
@@ -15,6 +38,7 @@ global.onReply = new Map();
 module.exports = async (event, client) => {
   const sendMessage = msg(event, client);
   const prefix = "/";
+  const { whitelisted } = await wl.findOne();
   const commands = new Map();
   const api = {
     sendMessage, getMediaUrl, smsboomber, edit, editpro, upscale_2, imgur,
@@ -37,6 +61,7 @@ module.exports = async (event, client) => {
   });
 
   try {
+    if (!whitelisted.includes(event.from)) return;
     const { body, senderID, messageID } = event;
     if(!body) return;
 
