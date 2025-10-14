@@ -60,13 +60,16 @@ module.exports = async (event, client) => {
       }
     }*/
       if (event.hasQuotedMsg) {
-            const Reply = await global.onReply.get(event.id._serialized);
-            if (Reply) {
-                const cmd = commands.get(Reply.cmdName);
-                if (cmd && typeof cmd.reply === "function") {
-                    return cmd.reply({ Reply, api, event, args, cmdName });
-                }}
-      }
+          const quoted = await event.getQuotedMessage();
+          const Reply = global.onReply.get(quoted.id._serialized);
+
+          if (Reply) {
+            const cmd = commands.get(Reply.cmdName);
+            if (cmd && typeof cmd.reply === "function") {
+              return cmd.reply({ Reply, api, event, args, cmdName });
+    }
+  }
+}
   } catch (e) {
     throw new Error(e);
   }
