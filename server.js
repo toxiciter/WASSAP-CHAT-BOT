@@ -11,8 +11,14 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+let clientInitialized = false;
+
 mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter").then(() => {
     console.log("[ MONGODB ]:", "connected");
+    if (clientInitialized) {
+      console.log("[ CLIENT ]: Already initialized, skipping...");
+      return;    
+    }
     const store = new MongoStore({ mongoose: mongoose });
     const client = new Client({
         authStrategy: new RemoteAuth({
@@ -33,6 +39,7 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
         }
     });
 
+    clientInitialized = true; // ✅ ensure only once
     client.initialize();
 
 client.on('qr', async (qr) => {
