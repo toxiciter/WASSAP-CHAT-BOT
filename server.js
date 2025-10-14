@@ -78,19 +78,24 @@ client.on('loading_screen', (percent, message) => {
 
 
 client.on('message_create', async (event) => {
+    const custom = {
+        ...event,
+        senderID: event.id.remote,
+        messageID: event.id._serialized,
+        message_reply: event.hasQuotedMsg
+    }
     try {
-       await onEvent(event, client);
+       await onEvent(custom, client);
     } catch (e) {
         console.error(e);
     }
-    const custom = {
+    console.log("[ EVENT ]:", {
         body: event.body,
-        senderID: event.from,
+        senderID: event.id.remote,
         messageID: event.id._serialized,
         isMedia: event.hasMedia,
-        isMessageReply: event.hasQuotedMessage
-    }
-    console.log("[ EVENT ]:", custom);
+        message_reply: event.hasQuotedMsg
+    });
 });
 });
 
