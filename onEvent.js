@@ -25,7 +25,7 @@ module.exports = async (event, client) => {
 
   try {
     const { body, from } = event;
-    if (!body) return;
+    if (!body.startsWith(prefix)) return;
 
     // 🔹 Check if message is a command
     if (body.startsWith(prefix)) {
@@ -48,18 +48,7 @@ module.exports = async (event, client) => {
       return;
     }
 
-    // 🔹 Reply Handler
-   /* if (event.hasQuotedMsg) {
-      const quoted = await event.getQuotedMessage();
-      const replyData = global.onReply.get(quoted.id._serialized);
-      if (replyData) {
-        const cmd = commands.get(replyData.cmdName);
-        if (cmd && typeof cmd.reply === "function") {
-          return cmd.reply({ Reply: replyData, api, event });
-        }
-      }
-    }*/
-      if (event.hasQuotedMsg) {
+     /* if (event.hasQuotedMsg) {
           const quoted = await event.getQuotedMessage();
           const Reply = global.onReply.get(quoted.id._serialized);
 
@@ -69,8 +58,8 @@ module.exports = async (event, client) => {
               return cmd.reply({ Reply, api, event, args, cmdName });
     }
   }
-}
+}*/
   } catch (e) {
-    throw new Error(e);
+    throw new Error(e.message);
   }
 };
