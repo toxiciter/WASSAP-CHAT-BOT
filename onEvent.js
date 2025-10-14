@@ -56,7 +56,7 @@ module.exports = async (event, client) => {
           return cmd.reply({ Reply, api, event, cmdName });     
         }
       }
-    }!
+    }
     
   } catch (e) {
     throw new Error(e.message);
