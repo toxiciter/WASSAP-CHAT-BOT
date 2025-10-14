@@ -37,7 +37,7 @@ module.exports = async (event, client) => {
 
       if (!cmd) {
         return sendMessage(
-          "😿 | I don't have any command like this: " + cmdName,
+          "😿 I don't have any command like this: " + cmdName,
           from,
           event.id._serialized
         );
@@ -48,17 +48,16 @@ module.exports = async (event, client) => {
       return;
     }
 
-     /* if (event.hasQuotedMsg) {
-          const quoted = await event.getQuotedMessage();
-          const Reply = global.onReply.get(quoted.id._serialized);
-
-          if (Reply) {
-            const cmd = commands.get(Reply.cmdName);
-            if (cmd && typeof cmd.reply === "function") {
-              return cmd.reply({ Reply, api, event, args, cmdName });
-    }
-  }
-}*/
+    if (event.hasQuotedMsg) {     
+      const Reply = await global.onReply.get(event.id._serialized);
+      if (Reply) {      
+        const cmd = commands.get(Reply.cmdName);    
+        if (cmd && typeof cmd.reply === "function") {       
+          return cmd.reply({ Reply, api, event, cmdName });     
+        }
+      }
+    }!
+    
   } catch (e) {
     throw new Error(e.message);
   }
