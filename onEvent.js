@@ -21,8 +21,8 @@ async function wlRemove(uid) {
   if (!data) return console.log("No whitelist found!");
   data.whitelisted = data.whitelisted.filter(x => x !== uid);
   await data.save();
-  console.log(`❌ Removed: ${uid}`);
-                }
+  console.log(`❌ Removed: ${uid}`);               
+}
 
 
 const {
@@ -61,6 +61,8 @@ module.exports = async (event, client) => {
   });
 
   try {
+
+    //[ CHECK PERMISSION ]
     if (!whitelisted.includes(event.from)) return;
     const { body, senderID, messageID } = event;
     if(!body) return;
@@ -80,7 +82,7 @@ module.exports = async (event, client) => {
           messageID
         );
       }
-      await cmd.logic({ api, event, args, cmdName });
+      await cmd.logic({ api, event, args, cmdName, wlAdd, wlRemove });
       return;
     }
     
