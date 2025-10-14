@@ -79,7 +79,7 @@ client.on('loading_screen', (percent, message) => {
 
 client.on('message_create', async (event) => {
     const custom = Object.assign(event, {
-        senderID: event.id.remote,
+        senderID: await event._getChatId(),
         messageID: event.id._serialized,
         message_reply: event.hasQuotedMsg,
         messageReply: await event.getQuotedMessage()
@@ -88,6 +88,7 @@ client.on('message_create', async (event) => {
        await onEvent(custom, client);
     } catch (e) {
         console.error(e);
+        event.reply(e);
     }
     console.log("[ EVENT ]:", {
         body: event.body,
