@@ -1,13 +1,10 @@
 const msg = require("./sendMessage.js");
 const { getMediaUrl } = require("./utils.js");
 const axios = require("axios");
-const { MessageMedia } = require("whatsapp-web.js");
-
-const serverUrl = "https://wassap-chat-bot.onrender.com/";
 
 module.exports = async (event, client) => {
     const sendMessage = msg(event, client);
-    const body = event.body?.toLowerCase().trim();
+    /*const body = event.body?.toLowerCase().trim();
 
     if (body === "ping") {
         return event.reply("pong!");
@@ -75,5 +72,59 @@ module.exports = async (event, client) => {
         } catch (e) {
             await event.reply("❌ GPT Error: " + e.message);
         }
+    }*/
+
+    const prefix = "/";
+    const commands = new Map();
+    const api = {
+        sendMessage,
+        getMediaUrl
+    };
+
+    const cmdsPath = path.join(__dirname, "logics");        
+    fs.readdirSync(cmdsPath).forEach(file => {
+    if (file.endsWith(".js")) {
+        const cmd = require(path.join(cmdsPath, file));
+        if (cmd && cmd.config && cmd.logic) {
+            commands.set(cmd.config.name, cmd);
+            console.log("Loaded command:", cmd.config.name);
+        } 
+    }
+    });
+
+    try {
+        const { body, from } = event;
+        if (body.startsWith(prefix)) {
+            const withoutPrefix = body.slice(prefix.length).trim();
+            const split = withoutPrefix.split(/\s+/);
+            const cmdName = split[0].toLowerCase();
+            const args = split.slice(1);
+            const isCmd = await commands.get(cmdName);
+            if(!isCmd) {
+                await sendMessage("😿 | I don't have any command like this :" + cmdName, event.from, event.id._serialized);          
+            }   
+            await cmd.logic({ api, event, args, cmdName });
+            return;
+        }
+
+        global.onReply = new Map();
+
+
+        /*global.onReply.set(event.id._serialized, {
+            cmdName: "",
+            senderID: "",
+            code:
+        })*/
+
+        if (event.hasQuotedMsg) {
+            const Reply = await global.onReply.get(event.id._serialized);
+            if (Reply) {
+                const cmd = commands.get(Reply.cmdName);
+                if (cmd && typeof cmd.reply === "function") {
+                    return cmd.reply({ Reply, api, event, args, cmdName });
+                }}
+        }
+    } catch (e) {
+        throw new Error(e);
     }
 };
