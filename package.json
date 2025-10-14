@@ -18,7 +18,8 @@
     "wwebjs-mongo": "^1.1.0",
     "mongoose": "^8.5.2",
     "form-data": "^4.0.2",
-    "cheerio": "^1.0.0"
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
