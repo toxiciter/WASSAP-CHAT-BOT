@@ -25,7 +25,8 @@ module.exports = async (event, client) => {
 
   try {
     const { body, senderID, messageID } = event;
-    if (!body.startsWith(prefix)) return;
+    //if (!body.startsWith(prefix)) return;
+    if(!body) return;
 
     // 🔹 Check if message is a command
     if (body.startsWith(prefix)) {
@@ -48,15 +49,16 @@ module.exports = async (event, client) => {
       return;
     }
 
-    if (event.hasQuotedMsg) {     
-      const Reply = await global.onReply.get(event.messageID);
-      if (Reply) {      
-        const cmd = commands.get(Reply.cmdName);    
-        if (cmd && typeof cmd.reply === "function") {       
-          return cmd.reply({ Reply, api, event, cmdName });     
-        }
-      }
+    if (event.hasQuotedMsg) {
+      const quoted = await event.getQuotedMessage();
+      const Reply = global.onReply.get(quoted.id._serialized);
+      if (Reply) {
+        const cmd = commands.get(Reply.cmdName);
+        if (cmd && typeof cmd.reply === "function") {
+          return cmd.reply({ Reply, api, event, cmdName });
     }
+  }
+}
     
   } catch (e) {
     throw new Error(e.message);
