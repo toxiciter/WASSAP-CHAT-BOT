@@ -1,21 +1,19 @@
-const axios = require("axios");
-
 module.exports = {
   config: {
     name: "edit",
-    author: "",
-    description: "",
-    category: "",
-    guide: ""
+    author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
+    description: "Edit image using AI",
+    category: "AI",
+    guide: "/edit add a cat (with image)\n/edit add a cat (reply to an image)"
   },
   logic: async ({ api, event, args }) => {
-    const p = args.join(" ") || "explain";
-    if (event.hasMedia) {
-     const url = await api.getMediaUrl(event);
-    } else {
-      event.reply("please provide an image with what kind of edit you want explain...!")
+    try {
+      const prompt = args ? args.join(" ") : event.reply("please explain what kind of edit you want..?");
+      const url = event.messageReply.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : event.reply("Please provide an image to editing");
+      const media = await api.edit(url, prompt);
+      await api.sendMessage({ attachment: media, body: "ಠಿ⁠_⁠ಠಿ Edited...!!" }, event.senderID, event.messageID);
+    } catch (e) {
+      throw new Error(e.message);
     }
-    const { data } = await axios.get(`https://www.noobx.ct.ws/api/edit?url=${url}&prompt=${encodeURIComponent(p)}`);
-    await api.sendMessage({ attachment: data.url, body: data.response }, event.from, event.id._serialized);
   }
 };
