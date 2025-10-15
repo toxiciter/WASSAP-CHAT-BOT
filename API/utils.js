@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 const util = require("util");
 const cheerio = require("cheerio");
-const cors = require("cors");
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 
