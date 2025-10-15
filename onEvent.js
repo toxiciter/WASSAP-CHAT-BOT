@@ -46,11 +46,7 @@ const {
 global.onReply = new Map();
 
 module.exports = async (event, client) => {
-  try {
-    const sendMessage = msg(event, client);
-  } catch (e) {
-    throw new Error("[ SENDMESSAGE_ERROR ]:", e);
-  }
+  const sendMessage = msg(event, client);
   const prefix = "/";
   const owner = "8801843152929@c.us";
   await wl.add(owner);
@@ -85,7 +81,7 @@ module.exports = async (event, client) => {
 
 
     //[ CHECK PERMISSION ]
-    if (!whitelisted.includes(event.from)) return;
+    //if (!whitelisted.includes(event.from)) return;
     const { body, senderID, messageID } = event;
     if(!body) return;
 
