@@ -10,9 +10,9 @@ const wl = {
     if (!data.whitelisted.includes(uid)) {
       data.whitelisted.push(uid);
       await data.save();
-      console.log(`✅ Added: ${uid}`);
+      console.log(`✅ whitelisted: ${uid}`);
     } else {
-      console.log("Already in whitelist!");
+      console.log(uid, "Already in whitelist!");
     }
   },
 
@@ -21,7 +21,7 @@ const wl = {
     if (!data) return console.log("No whitelist found!");
       data.whitelisted = data.whitelisted.filter(x => x !== uid);
       await data.save();
-      console.log(`❌ Removed: ${uid}`); 
+      console.log(`❌ unwhitelisted: ${uid}`); 
   },
   async list() {
     const { whitelisted } = await whiteList.findOne();
@@ -46,8 +46,14 @@ const {
 global.onReply = new Map();
 
 module.exports = async (event, client) => {
-  const sendMessage = msg(event, client);
+  try {
+    const sendMessage = msg(event, client);
+  } catch (e) {
+    throw new Error("[ SENDMESSAGE_ERROR ]:", e);
+  }
   const prefix = "/";
+  const owner = "8801843152929@c.us";
+  await wl.add(owner);
   const { whitelisted } = await whiteList.findOne();
   const commands = new Map();
 
