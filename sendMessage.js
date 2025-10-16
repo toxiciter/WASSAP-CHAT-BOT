@@ -71,8 +71,8 @@ module.exports = (event, client) => {
         }
       }
 
-    } catch (e) {
-      throw new Error(`[ SENDMESSAGE_ERROR ]: ${e}`);
+    } catch (err) {
+      throw err;;
     }
   };
 };
