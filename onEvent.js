@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const msg = require("./sendMessage.js");
 const { getMediaUrl } = require("./utils.js");
 const whiteList = require(path.join(__dirname, "API", "models", "WhiteListed.js"));
 
@@ -63,7 +62,7 @@ fs.readdirSync(cmdsPath).forEach(file => {
 
 
 module.exports = async (event, client) => {
-  const sendMessage = msg(event, client);
+  const sendMessage = require("./sendMessage.js")(event, client);
   const prefix = "/";
   
   
