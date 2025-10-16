@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { getMediaUrl } = require("./utils.js");
+const { getMedia } = require("./utils.js");
 const whiteList = require(path.join(__dirname, "API", "models", "WhiteListed.js"));
 
 const wl = {
@@ -48,26 +48,31 @@ const {
 global.onReply = new Map();
 const commands = new Map();
 
-// [ LOAD COMMAND ]     
-const cmdsPath = path.join(__dirname, "logics");  
-fs.readdirSync(cmdsPath).forEach(file => {   
-  if (file.endsWith(".js")) {           
-    const cmd = require(path.join(cmdsPath, file));      
-    if (cmd?.config?.name && typeof cmd.logic === "function") {     
-      commands.set(cmd.config.name.toLowerCase(), cmd);    
-      console.log("[ COMMAND LOADED ]:", cmd.config.name);        
-    }          
-  }      
-});
+// [ LOAD COMMAND ]   
+try {
+  const cmdsPath = path.join(__dirname, "logics");  
+  fs.readdirSync(cmdsPath).forEach(file => {        
+    if (file.endsWith(".js")) {
+      const cmd = require(path.join(cmdsPath, file));    
+      if (cmd?.config?.name && typeof cmd.logic === "function") {       
+        commands.set(cmd.config.name.toLowerCase(), cmd);      
+        console.log("[ COMMAND LOADED ]:", cmd.config.name);    
+      }  
+    }
+  });
+} catch (e) {
+  console.error("[ COMMAND LOADED ERROR ]:", e)
+}
 
 
 module.exports = async (event, client) => {
   const sendMessage = require("./sendMessage.js")(event, client);
   const prefix = "/";
+  const whitelisted = await wl.list();
   
   
   const api = {
-    sendMessage, getMediaUrl, smsboomber, edit, editpro, upscale_2, imgur,
+    sendMessage, getMedia, smsboomber, edit, editpro, upscale_2, imgur,
     dalle_3, imagine, imagine_2, art, img2img,
     text2song, swap, tools, removebg, alldl,
     prompt, prompt_2, gpt, flux, changebg, flag,
@@ -75,13 +80,11 @@ module.exports = async (event, client) => {
   };
   
 
-  
-
-
-    //[ CHECK PERMISSION ]
-    //if (!whitelisted.includes(event.from)) return;
     const { body, senderID, messageID } = event;
     if(!body) return;
+
+  //[ CHECK PERMISSION ]
+    if (!whitelisted.includes(event.from)) return;
 
   
     // [ LOGIC ]
@@ -95,7 +98,7 @@ module.exports = async (event, client) => {
 
       if (!cmd) {
         return sendMessage(
-          "ಠ⁠ᴥ⁠ಠ I don't have the command: " + cmdName,
+          `ಠ⁠ᴥ⁠ಠ Command "${cmdName}" does not exist...!!`,
           senderID,
           messageID
         );
@@ -103,7 +106,12 @@ module.exports = async (event, client) => {
       await cmd.logic({ api, event, args, cmdName, wl });
       return;
     };
-    
+
+
+    /*[ CHAT ]
+    if (event.body) {
+      
+    }*/
 
     //[ REPLY ]
     if (event.hasQuotedMsg) {
@@ -115,7 +123,7 @@ module.exports = async (event, client) => {
           return cmd.reply({ Reply, api, event, cmdName });
         }
       }
-    } 
+    };
   } catch (err) {
     console.error("[ ERROR ]:", err);
     event.reply(err)
