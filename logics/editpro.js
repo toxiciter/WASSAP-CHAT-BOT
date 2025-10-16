@@ -9,7 +9,14 @@ module.exports = {
   logic: async ({ api, event, args }) => {
     try {
       const prompt = args ? args.join(" ") : event.reply("please explain what kind of edit you want..?");
-      const url = event.messageReply.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : event.reply("Please provide an image to editing");
+      let url;
+      if (event.message_reply && event.messageReply.hasMedia) {
+        url = await api.getMediaUrl(event);
+      } else if (event.hasMedia) {
+        url = await api.getMediaUrl(event);
+      } else {
+        return event.reply("Please provide an image to edit.");
+      }
       const media = await api.editpro(url, prompt);
       await api.sendMessage({ attachment: media, body: "ಠಿ⁠_⁠ಠಿ Edited...!!" }, event.senderID, event.messageID);
     } catch (e) {
