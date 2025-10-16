@@ -5,20 +5,19 @@ module.exports = {
     name: "gpt",
     author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
     description: "For conversation with real chatGPT",
+    category: "AI",
     guide: "/gpt [YOUR MESSAGE]\n/gpt [YOUR MESSAGE] (with an image)\nexample: /gpt hey ki koro"
   },
 
   logic: async ({ api, args, event, cmdName }) => {
     const prompt = args.join(" ") || "hie";
     try {
-    let url;
+    let url = "";
       if (event.message_reply && event.messageReply.hasMedia) {
         url = await api.getMediaUrl(event);
       } else if (event.hasMedia) {
         url = await api.getMediaUrl(event);
-      } else {
-        return event.reply("Please provide an image to edit.");
-      }
+      };
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
@@ -30,21 +29,19 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      event.reply(e)
+      throw e;
     }
   },
 
   reply: async ({ api, event, cmdName }) => {
     try {
     const prompt = event.body;
-    let url;
+    let url = "";
       if (event.message_reply && event.messageReply.hasMedia) {
         url = await api.getMediaUrl(event);
       } else if (event.hasMedia) {
         url = await api.getMediaUrl(event);
-      } else {
-        return event.reply("Please provide an image to edit.");
-      }
+      };
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
@@ -56,7 +53,7 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      event.reply(e);
+      throw e;
     }
   }
 };
