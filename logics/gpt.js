@@ -11,15 +11,21 @@ module.exports = {
   logic: async ({ api, args, event, cmdName }) => {
     const prompt = args.join(" ") || "hie";
     try {
-    const url = event.messageReply?.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
-
+    let url;
+      if (event.message_reply && event.messageReply.hasMedia) {
+        url = await api.getMediaUrl(event);
+      } else if (event.hasMedia) {
+        url = await api.getMediaUrl(event);
+      } else {
+        return event.reply("Please provide an image to edit.");
+      }
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
 
     const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
 
-    global.onReply.set(msg.id._serialized, {
+    global.onReply.set(msg.messageID, {
       cmdName,
       author: event.senderID
     });
@@ -31,15 +37,21 @@ module.exports = {
   reply: async ({ api, event, cmdName }) => {
     try {
     const prompt = event.body;
-    const url = event.messageReply?.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
-
+    let url;
+      if (event.message_reply && event.messageReply.hasMedia) {
+        url = await api.getMediaUrl(event);
+      } else if (event.hasMedia) {
+        url = await api.getMediaUrl(event);
+      } else {
+        return event.reply("Please provide an image to edit.");
+      }
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
 
     const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
 
-    global.onReply.set(msg.id._serialized, {
+    global.onReply.set(msg.messageID, {
       cmdName,
       author: event.senderID
     });
