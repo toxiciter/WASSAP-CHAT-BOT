@@ -29,9 +29,10 @@ function dataType(input) {
 
 const getMedia = { 
     async url(event) {
-        try {                
-            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();  
-            const fileName = "file_" + Date.now() + ".jpg";
+        try {
+            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();
+            const ext = media.mimetype.startsWith("image") ? ".jpg" : ".mp4";
+            const fileName = "file_" + Date.now() + ext;
             const imagePath = path.join(__dirname, "public", fileName);       
             fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
             return "https://wassap-chat-bot.onrender.com/" + fileName;     
@@ -42,8 +43,9 @@ const getMedia = {
 
     async file(event) {
         try {
-            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();  
-            const fileName = "file_" + Date.now() + ".jpg";
+            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();
+            const ext = media.mimetype.startsWith("image") ? ".jpg" : ".mp4";
+            const fileName = "file_" + Date.now() + ext;
             const imagePath = path.join(__dirname, "public", fileName);       
             fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
             return imagePath;
