@@ -11,7 +11,7 @@ module.exports = {
   logic: async ({ api, args, event, cmdName }) => {
     const prompt = args.join(" ") || "hie";
     try {
-    const url = event.messageReply.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
+    const url = event.messageReply?.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
 
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
@@ -31,7 +31,7 @@ module.exports = {
   reply: async ({ api, event, cmdName }) => {
     try {
     const prompt = event.body;
-    const url = event.messageReply.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
+    const url = event.messageReply?.hasMedia ? await api.getMediaUrl(event) : event.hasMedia ? await api.getMediaUrl(event) : "";
 
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
