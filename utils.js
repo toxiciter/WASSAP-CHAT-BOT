@@ -26,19 +26,34 @@ function dataType(input) {
     return typeof input;
 }
 
-async function getMediaUrl(event) {
-  try {
-  const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();
-  const fileName = "file_" + Date.now() + ".jpg";
-  const imagePath = path.join(__dirname, "public", fileName);
-  fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
-  return "https://wassap-chat-bot.onrender.com/" + fileName;
-  } catch (e) {
-    throw new Error(e.message)
-  }
-}
+
+const getMedia = { 
+    async url(event) {
+        try {                
+            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();  
+            const fileName = "file_" + Date.now() + ".jpg";
+            const imagePath = path.join(__dirname, "public", fileName);       
+            fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
+            return "https://wassap-chat-bot.onrender.com/" + fileName;     
+        } catch (e) {                
+            throw e;      
+        }    
+    },
+
+    async file(event) {
+        try {
+            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();  
+            const fileName = "file_" + Date.now() + ".jpg";
+            const imagePath = path.join(__dirname, "public", fileName);       
+            fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
+            return imagePath;
+        } catch (e) {
+            throw e;
+        }
+    }
+};
 
 module.exports = {
   dataType,
-  getMediaUrl
+  getMedia
 };
