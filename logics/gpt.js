@@ -24,7 +24,7 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      throw e;
+      event.reply(e)
     }
   },
 
@@ -44,7 +44,7 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      throw e;
+      event.reply(e);
     }
   }
 };
