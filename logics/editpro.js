@@ -13,7 +13,7 @@ module.exports = {
       const media = await api.editpro(url, prompt);
       await api.sendMessage({ attachment: media, body: "ಠಿ⁠_⁠ಠಿ Edited...!!" }, event.senderID, event.messageID);
     } catch (e) {
-      throw new Error(e.message);
+      throw e;
     }
   }
 };
