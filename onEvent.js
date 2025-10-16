@@ -46,26 +46,8 @@ const {
 
 
 global.onReply = new Map();
-const commands = new Map();
 
-// [ LOAD COMMAND ]   
-try {
-  const cmdsPath = path.join(__dirname, "logics");  
-  fs.readdirSync(cmdsPath).forEach(file => {        
-    if (file.endsWith(".js")) {
-      const cmd = require(path.join(cmdsPath, file));    
-      if (cmd?.config?.name && typeof cmd.logic === "function") {       
-        commands.set(cmd.config.name.toLowerCase(), cmd);      
-        console.log("[ COMMAND LOADED ]:", cmd.config.name);    
-      }  
-    }
-  });
-} catch (e) {
-  console.error("[ COMMAND LOADED ERROR ]:", e)
-}
-
-
-module.exports = async (event, client) => {
+module.exports = async (event, client, commands) => {
   const sendMessage = require("./sendMessage.js")(event, client);
   const prefix = "/";
   const whitelisted = await wl.list();
