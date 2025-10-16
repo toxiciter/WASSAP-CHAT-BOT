@@ -44,15 +44,27 @@ const {
 
 
 global.onReply = new Map();
+const owner = "8801843152929@c.us";
+await wl.add(owner);
+const commands = new Map();
+
+// [ LOAD COMMAND ]     
+const cmdsPath = path.join(__dirname, "logics");  
+fs.readdirSync(cmdsPath).forEach(file => {   
+  if (file.endsWith(".js")) {           
+    const cmd = require(path.join(cmdsPath, file));      
+    if (cmd?.config?.name && typeof cmd.logic === "function") {     
+      commands.set(cmd.config.name.toLowerCase(), cmd);    
+      console.log("[ COMMAND LOADED ]:", cmd.config.name);        
+    }          
+  }      
+});
+
 
 module.exports = async (event, client) => {
   const sendMessage = msg(event, client);
   const prefix = "/";
-  const owner = "8801843152929@c.us";
-  await wl.add(owner);
-  const { whitelisted } = await whiteList.findOne();
-  const commands = new Map();
-
+  
   
   const api = {
     sendMessage, getMediaUrl, smsboomber, edit, editpro, upscale_2, imgur,
@@ -63,21 +75,7 @@ module.exports = async (event, client) => {
   };
   
 
-  // [ LOAD COMMAND ]
-  try {  
-    const cmdsPath = path.join(__dirname, "logics");  
-    fs.readdirSync(cmdsPath).forEach(file => {    
-      if (file.endsWith(".js")) {      
-        const cmd = require(path.join(cmdsPath, file));      
-        if (cmd?.config?.name && typeof cmd.logic === "function") {        
-          commands.set(cmd.config.name.toLowerCase(), cmd);    
-          console.log("[ COMMAND LOADED ]:", cmd.config.name);      
-        }    
-      }  
-    });
-  } catch (e) {
-    throw new Error("[ LOAD_COMMAND_ERROR ]:", e);
-  }
+  
 
 
     //[ CHECK PERMISSION ]
