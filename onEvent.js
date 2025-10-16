@@ -117,6 +117,7 @@ module.exports = async (event, client) => {
       }
     } 
   } catch (err) {
-    throw err;
+    console.error("[ ERROR ]:", err);
+    event.reply(err)
   }
 };
