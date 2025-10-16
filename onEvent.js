@@ -24,8 +24,8 @@ const wl = {
       console.log(`❌ unwhitelisted: ${uid}`); 
   },
   async list() {
-    const { whitelisted } = await whiteList.findOne();
-    return whitelisted;
+    const data = await whiteList.findOne();
+    return data ? data.whitelisted : [];
   }
 };
 
@@ -40,12 +40,13 @@ const {
   font, quiz, album, permission, xnxx, yt, tiktokVideo, grok
       } = require(path.join(__dirname, "API", "hasan.js"));
 
-
+(async () => {
+  const owner = "8801843152929@c.us";
+  await wl.add(owner);
+})();
 
 
 global.onReply = new Map();
-const owner = "8801843152929@c.us";
-await wl.add(owner);
 const commands = new Map();
 
 // [ LOAD COMMAND ]     
@@ -104,7 +105,7 @@ module.exports = async (event, client) => {
       return;
     }
   } catch (e) {
-    throw new Error("[ LOGIC_ERROR ]:", e);
+    throw new Error(`[ LOGIC_ERROR ]: ${e}`);
   }
     
 
@@ -121,6 +122,6 @@ module.exports = async (event, client) => {
       }
     } 
   } catch (e) {
-    throw new Error("[ REPLY_ERROR ]:", e);
+    throw new Error(`[ REPLY_ERROR ]: ${e}`);
   }
 };
