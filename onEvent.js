@@ -102,14 +102,10 @@ module.exports = async (event, client) => {
       }
       await cmd.logic({ api, event, args, cmdName, wl });
       return;
-    }
-  } catch (e) {
-    throw new Error(`[ LOGIC_ERROR ]: ${e}`);
-  }
+    };
     
 
     //[ REPLY ]
-  try {
     if (event.hasQuotedMsg) {
       const quoted = await event.getQuotedMessage();
       const Reply = global.onReply.get(quoted.id._serialized);
@@ -120,7 +116,7 @@ module.exports = async (event, client) => {
         }
       }
     } 
-  } catch (e) {
-    throw new Error(`[ REPLY_ERROR ]: ${e}`);
+  } catch (err) {
+    throw err;
   }
 };
