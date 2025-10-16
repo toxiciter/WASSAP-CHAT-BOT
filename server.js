@@ -84,12 +84,7 @@ client.on('message_create', async (event) => {
         message_reply: event.hasQuotedMsg,
         messageReply: await event.getQuotedMessage()
     });
-    try {
-       await onEvent(custom, client);
-    } catch (e) {
-        console.error(e);
-        event.reply(e);
-    }
+    await onEvent(custom, client);
     console.log("[ EVENT ]:", {
         body: event.body,
         senderID: event.id.remote,
