@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { getMedia, wl, errorMessage, json } = require("./utils.js");
-const info = require(path.join(__dirname, "info.json");
+const info = require(path.join(__dirname, "info.json"));
 const prefix = info.prefix || "/";
 
 
