@@ -4,7 +4,7 @@ module.exports = {
     author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
     description: "Edit image using AI",
     category: "AI",
-    guide: "/edit add a cat (with image)\n/edit add a cat (reply to an image)"
+    guide: "{pn} add a cat (with image)\n{pn} add a cat (with reply an image)"
   },
   logic: async ({ api, event, args }) => {
     try {
