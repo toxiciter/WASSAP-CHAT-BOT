@@ -84,28 +84,9 @@ client.on('message_create', async (event) => {
         message_reply: event.hasQuotedMsg,
         messageReply: await event.getQuotedMessage()
     });
-
-    const commands = new Map();
-
-    // [ LOAD COMMAND ]
-    try { 
-        const cmdsPath = path.join(__dirname, "logics");  
-        fs.readdirSync(cmdsPath).forEach(file => {
-            if (file.endsWith(".js")) {      
-                const cmd = require(path.join(cmdsPath, file));      
-                if (cmd?.config?.name && typeof cmd.logic === "function") {
-                    commands.set(cmd.config.name.toLowerCase(), cmd);    
-                    console.log("[ COMMAND LOADED ]:", cmd.config.name);      
-                }    
-            }
-        });
-    } catch (e) {
-        console.error("[ COMMAND LOADED ERROR ]:", e)
-        event.reply(e.toString());
-    }
     
     
-    await onEvent(custom, client, commands);
+    await onEvent(custom, client);
     console.log("[ EVENT ]:", {
         body: event.body,
         senderID: event.id.remote,
