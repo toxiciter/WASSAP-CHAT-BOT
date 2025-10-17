@@ -2,9 +2,9 @@ module.exports = {
   config: {
     name: "wl",
     author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
-    description: "grant permission to use bot",
+    description: "Grant permission to use bot",
     category: "owner",
-    guide: "Usage: /wl [add | -a] <uid> or reply a message\n/wl [remove | -r] <uid>\n/wl [list | -l]"
+    guide: "{pn} [add | -a] <uid> or reply to a message of that user\n{pn} [remove | -r] <uid> or or reply to a message of that user\n{pn} [list | -l]"
   },
   logic: async ({ wl, event, api, args }) => {
     const uid = event.message_reply ? event.messageReply.from : args[1];
@@ -22,7 +22,8 @@ module.exports = {
       }
       case "list":
       case "-l": {
-        return await wl.list();
+        const list = await wl.list();
+        return event.reply(`WHITELIST USER\nlist.join("\n")`);
       }
         
 
