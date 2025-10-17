@@ -16,12 +16,11 @@ module.exports = (event, client) => {
         if (!attachment) {
           
           if (Array.isArray(chatID)) {
-            await Promise.all(chatID.map(id => client.sendMessage(id, body, { quotedMessageId: messageReply || "" })));
+            return await Promise.all(chatID.map(id => client.sendMessage(id, body, { quotedMessageId: messageReply || "" })));
           } else {
-            await client.sendMessage(chatID, body, { quotedMessageId: messageReply || "" });
+            return await client.sendMessage(chatID, body, { quotedMessageId: messageReply || "" });
           }
-          return;
-        }
+        };
 
         
         if (Array.isArray(attachment)) {
@@ -33,13 +32,13 @@ module.exports = (event, client) => {
                 : await MessageMedia.fromFilePath(file);
 
               if (Array.isArray(chatID)) {
-                await Promise.all(
+                return await Promise.all(
                   chatID.map(id =>
                     client.sendMessage(id, media, { caption: body, quotedMessageId: messageReply || "" })
                   )
                 );
               } else {
-                await client.sendMessage(chatID, media, { caption: body, quotedMessageId: messageReply || "" });
+                return await client.sendMessage(chatID, media, { caption: body, quotedMessageId: messageReply || "" });
               }
             })
           );
@@ -52,22 +51,22 @@ module.exports = (event, client) => {
             : await MessageMedia.fromFilePath(attachment);
 
           if (Array.isArray(chatID)) {
-            await Promise.all(
+            return await Promise.all(
               chatID.map(id =>
                 client.sendMessage(id, media, { caption: body, quotedMessageId: messageReply || "" })
               )
             );
           } else {
-            await client.sendMessage(chatID, media, { caption: body, quotedMessageId: messageReply || "" });
+            return await client.sendMessage(chatID, media, { caption: body, quotedMessageId: messageReply || "" });
           }
         }
       } 
 
       else if (typeof msg === "string") {
         if (Array.isArray(chatID)) {
-          await Promise.all(chatID.map(id => client.sendMessage(id, msg, { quotedMessageId: messageReply || "" })));
+          return await Promise.all(chatID.map(id => client.sendMessage(id, msg, { quotedMessageId: messageReply || "" })));
         } else {
-          await client.sendMessage(chatID, msg, { quotedMessageId: messageReply || "" });
+          return await client.sendMessage(chatID, msg, { quotedMessageId: messageReply || "" });
         }
       }
 
