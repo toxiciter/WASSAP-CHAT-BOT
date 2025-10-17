@@ -14,9 +14,9 @@ module.exports = {
     try {
     let url = "";
       if (event.message_reply && event.messageReply.hasMedia) {
-        url = await api.getMediaUrl(event);
+        url = await api.getMedia.url(event);
       } else if (event.hasMedia) {
-        url = await api.getMediaUrl(event);
+        url = await api.getMedia.url(event);
       };
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
@@ -29,7 +29,8 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      throw e;
+      condole.log(e);
+      event.reply(e.message);
     }
   },
 
@@ -38,9 +39,9 @@ module.exports = {
     const prompt = event.body;
     let url = "";
       if (event.message_reply && event.messageReply.hasMedia) {
-        url = await api.getMediaUrl(event);
+        url = await api.getMedia.url(event);
       } else if (event.hasMedia) {
-        url = await api.getMediaUrl(event);
+        url = await api.getMedia.url(event);
       };
     const { data } = await axios.get(
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
@@ -53,7 +54,8 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      throw e;
+      condole.log(e);
+      event.reply(e.message);
     }
   }
 };
