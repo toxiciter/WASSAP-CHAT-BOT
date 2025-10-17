@@ -29,7 +29,7 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      condole.log(e);
+      console.log(e);
       event.reply(e.message);
     }
   },
@@ -54,7 +54,7 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      condole.log(e);
+      console.log(e);
       event.reply(e.message);
     }
   }
