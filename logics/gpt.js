@@ -29,8 +29,7 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      console.log(e);
-      event.reply(e.message);
+      throw e;
     }
   },
 
@@ -54,8 +53,7 @@ module.exports = {
       author: event.senderID
     });
     } catch (e) {
-      console.log(e);
-      event.reply(e.message);
+      throw e;
     }
   }
 };
