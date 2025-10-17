@@ -1,35 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const { getMedia } = require("./utils.js");
-const whiteList = require(path.join(__dirname, "API", "models", "WhiteListed.js"));
+const { getMedia, wl, errorMessage } = require("./utils.js");
 const prefix = "/";
-
-const wl = {
-  async add(uid) {  
-    const data = await whiteList.findOne() || await whiteList.create({});
-    if (!data.whitelisted.includes(uid)) {
-      data.whitelisted.push(uid);
-      await data.save();
-      console.log(`✅ whitelisted: ${uid}`);
-    } else {
-      console.log(uid, "Already in whitelist!");
-    }
-  },
-
-  async remove(uid) {
-    const data = await whiteList.findOne();
-    if (!data) return console.log("No whitelist found!");
-      data.whitelisted = data.whitelisted.filter(x => x !== uid);
-      await data.save();
-      console.log(`❌ unwhitelisted: ${uid}`); 
-  },
-  async list() {
-    const data = await whiteList.findOne();
-    return data ? data.whitelisted : [];
-  }
-};
-
-
 
 
 const {
@@ -148,6 +120,7 @@ module.exports = async (event, client) => {
     };
   } catch (err) {
     console.error("[ ERROR IN COMMAND ]:", err);
-    await api.sendMessage(err, event.senderID, event.messageID)
+    const eMsg = errorMessage(err);
+    await api.sendMessage(eMsg, event.senderID, event.messageID);
   }
 };
