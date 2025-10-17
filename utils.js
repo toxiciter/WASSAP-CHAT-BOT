@@ -1,6 +1,8 @@
 const fs = require("fs");
 const { URL } = require("url");
 const path = require("path");
+const whiteList = require(path.join(__dirname, "API", "models", "WhiteListed.js"));
+
 
 function dataType(input) {
     if (Array.isArray(input)) {
@@ -55,7 +57,55 @@ const getMedia = {
     }
 };
 
+function errorMessage(e) {
+  let message = `Error: ${e.message || 'No message'}\n`;
+  message += `Type: ${e.name || 'Unknown'}\n`;
+
+  // Axios specific error
+  if (e.isAxiosError) {
+    if (e.response) {
+      message += `Status: ${e.response.status}\n`;
+      message += `Server Response: ${JSON.stringify(e.response.data, null, 2)}\n`; // prettier JSON
+    } else if (e.request) {
+      message += `No response received. Request details: ${e.request}\n`;
+    }
+  }
+
+  message += `STACK:\n${e.stack || 'No stack available'}`;
+
+  return message;
+};
+
+
+const wl = {
+  async add(uid) {  
+    const data = await whiteList.findOne() || await whiteList.create({});
+    if (!data.whitelisted.includes(uid)) {
+      data.whitelisted.push(uid);
+      await data.save();
+      console.log(`✅ whitelisted: ${uid}`);
+    } else {
+      console.log(uid, "Already in whitelist!");
+    }
+  },
+
+  async remove(uid) {
+    const data = await whiteList.findOne();
+    if (!data) return console.log("No whitelist found!");
+      data.whitelisted = data.whitelisted.filter(x => x !== uid);
+      await data.save();
+      console.log(`❌ blacklisted: ${uid}`); 
+  },
+  async list() {
+    const data = await whiteList.findOne();
+    return data ? data.whitelisted : [];
+  }
+};
+
+
 module.exports = {
-  dataType,
-  getMedia
+    dataType,
+    getMedia,
+    errorMessage,
+    wl
 };
