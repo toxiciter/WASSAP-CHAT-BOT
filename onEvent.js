@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require("path");
-const { getMedia, wl, errorMessage } = require("./utils.js");
-const prefix = "/";
+const { getMedia, wl, errorMessage, json } = require("./utils.js");
+const info = require(path.join(__dirname, "info.json");
+const prefix = info.prefix || "/";
 
 
 const {
@@ -79,7 +80,9 @@ module.exports = async (event, client) => {
     if(!body) return;
 
   //[ CHECK PERMISSION ]
-    if (!whitelisted.includes(event.from)) return;
+    if (info.whiteListMode) {
+      if(!whitelisted.includes(event.author)) return;
+    };
 
 
   try {
@@ -98,7 +101,7 @@ module.exports = async (event, client) => {
           messageID
         );
       }
-      await cmd.logic({ api, event, args, cmdName, wl });
+      await cmd.logic({ api, event, args, cmdName, wl, json, info });
       return;
     };
 
