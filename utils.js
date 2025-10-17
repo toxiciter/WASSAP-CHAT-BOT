@@ -102,10 +102,33 @@ const wl = {
   }
 };
 
+const jsonPath = path.join(__dirname, "info.json");
+const json = {
+  async read() {
+    const absolute = path.resolve(jsonPath);
+    const raw = await fs.readFile(absolute, 'utf8');
+    return JSON.parse(raw);
+  },
+  
+  async write(obj) {
+    const absolute = path.resolve(jsonPath);
+    const data = JSON.stringify(obj, null, 2);
+    await fs.writeFile(absolute, data, 'utf8');
+  },
+  
+  async edit(key, value) {
+    const obj = await this.read();
+    obj[key] = value;
+    await this.write(obj);
+    return { ok: true, msg: `Key "${key}" updated.` };
+  }
+};
+
 
 module.exports = {
     dataType,
     getMedia,
     errorMessage,
-    wl
+    wl,
+    json
 };
