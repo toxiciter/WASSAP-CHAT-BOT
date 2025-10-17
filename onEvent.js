@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { getMedia } = require("./utils.js");
 const whiteList = require(path.join(__dirname, "API", "models", "WhiteListed.js"));
+const prefix = "/";
 
 const wl = {
   async add(uid) {  
@@ -90,7 +91,6 @@ try {
 
 module.exports = async (event, client) => {
   const sendMessage = require("./sendMessage.js")(event, client);
-  const prefix = "/";
   const whitelisted = await wl.list();
   
   
