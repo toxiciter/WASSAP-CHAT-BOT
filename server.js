@@ -82,7 +82,7 @@ client.on('message_create', async (event) => {
         senderID: await event._getChatId(),
         messageID: event.id._serialized,
         message_reply: event.hasQuotedMsg,
-        messageReply: return await event.getQuotedMessage()
+        messageReply: await event.getQuotedMessage()
     });
     
     
