@@ -82,11 +82,11 @@ client.on('message_create', async (event) => {
         senderID: await event._getChatId(),
         messageID: event.id._serialized,
         message_reply: event.hasQuotedMsg,
-        messageReply: await event.getQuotedMessage()
+        messageReply: return await event.getQuotedMessage()
     });
     
     
-    await onEvent(custom, client);
+    onEvent(custom, client);
     console.log("[ EVENT ]:", {
         body: event.body,
         senderID: event.id.remote,
