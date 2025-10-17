@@ -47,22 +47,42 @@ const {
 
 global.onReply = new Map();
 const commands = new Map();
-
-    // [ LOAD COMMAND ]
-    try { 
-        const cmdsPath = path.join(__dirname, "logics");  
-        fs.readdirSync(cmdsPath).forEach(file => {
-            if (file.endsWith(".js")) {      
-                const cmd = require(path.join(cmdsPath, file));      
-                if (cmd?.config?.name && typeof cmd.logic === "function") {
-                    commands.set(cmd.config.name.toLowerCase(), cmd);    
-                    console.log("[ COMMAND LOADED ]:", cmd.config.name);      
-                }    
-            }
-        });
-    } catch (e) {
-        console.error("[ COMMAND LOADED ERROR ]:", e)
+    
+// [ LOAD COMMAND ]
+try {
+  const cmdsPath = path.join(__dirname, "logics");
+  const files = fs.readdirSync(cmdsPath).filter(f => f.endsWith(".js"));
+  
+  for (const file of files) {
+    const filePath = path.join(cmdsPath, file);
+    try {
+      delete require.cache[require.resolve(filePath)];
+      const cmd = require(filePath);
+      
+      if (!cmd?.config?.name) {
+        console.warn(`Missing "config.name" in command: ${file}`);
+        continue;
+      }
+      
+      if (typeof cmd.logic !== "function" || !cmd.logic) {
+        console.warn(`Missing "logic" function in command: ${file}`);
+        continue;
+      }
+      
+      commands.set(cmd.config.name.toLowerCase(), cmd);
+      console.log(`[ COMMAND LOADED ]: ${cmd.config.name}`);
+    } catch (err) {
+      console.error(`[ FAILED TO LOAD ]: ${file}`);
+      if (err.name === "SyntaxError") {
+        console.error(`   ↳ Syntax error in command: ${file}`);
+      }
+      console.error("   ↳", err);
     }
+  }
+} catch (outerErr) {
+  console.error("[ COMMAND LOADER ERROR ]:", outerErr);
+}
+    
 
 module.exports = async (event, client) => {
   const sendMessage = require("./sendMessage.js")(event, client);
@@ -85,9 +105,9 @@ module.exports = async (event, client) => {
   //[ CHECK PERMISSION ]
     if (!whitelisted.includes(event.from)) return;
 
-  
-    // [ LOGIC ]
+
   try {
+    // [ LOGIC ]
     if (body.startsWith(prefix)) {
       const withoutPrefix = body.slice(prefix.length).trim();
       const split = withoutPrefix.split(/\s+/);
@@ -97,7 +117,7 @@ module.exports = async (event, client) => {
 
       if (!cmd) {
         return sendMessage(
-          `ಠ⁠ᴥ⁠ಠ Command "${cmdName}" does not exist...!!`,
+          `ಠ⁠ᴥ⁠ಠ Command "${cmdName}" does not exist..!`,
           senderID,
           messageID
         );
@@ -113,18 +133,17 @@ module.exports = async (event, client) => {
     }*/
 
     //[ REPLY ]
-    if (event.hasQuotedMsg) {
-      const quoted = await event.getQuotedMessage();
-      const Reply = global.onReply.get(quoted.id._serialized);
+    if (event.message_reply) {
+      const Reply = global.onReply.get(event.messageReply.id._serialized);
       if (Reply) {
         const cmd = commands.get(Reply.cmdName);
-        if (cmd && typeof cmd.reply === "function") {
-          return cmd.reply({ Reply, api, event, cmdName });
+        if (cmd && cmd.reply && typeof cmd.reply === "function") {
+          await cmd.reply({ Reply, api, event, cmdName: Reply.cmdName });
         }
       }
     };
   } catch (err) {
-    console.error("[ ERROR ]:", err);
-    event.reply(err)
+    console.error("[ ERROR IN COMMAND ]:", err);
+    await api.sendMessage(err, event.senderID, event.messageID)
   }
 };
