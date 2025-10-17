@@ -11,9 +11,9 @@ module.exports = {
       const prompt = args ? args.join(" ") : event.reply("please explain what kind of edit you want..?");
       let url;
       if (event.message_reply && event.messageReply.hasMedia) {
-        url = await api.getMediaUrl(event);
+        url = await api.getMedia.url(event);
       } else if (event.hasMedia) {
-        url = await api.getMediaUrl(event);
+        url = await api.getMedia.url(event);
       } else {
         return event.reply("Please provide an image to edit.");
       }
