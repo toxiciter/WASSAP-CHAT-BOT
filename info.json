@@ -1,5 +1,5 @@
 {
   "prefix": "/",
   "domain": "https://wassap-chat-bot.onrender.com",
-  "isWhitelisted": true
+  "whiteListMode": true
 }
