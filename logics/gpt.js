@@ -24,7 +24,7 @@ module.exports = {
 
     const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
 
-    global.onReply.set(msg.messageID, {
+    global.onReply.set(msg.id._serialized, {
       cmdName,
       author: event.senderID
     });
@@ -48,7 +48,7 @@ module.exports = {
 
     const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
 
-    global.onReply.set(msg.messageID, {
+    global.onReply.set(msg.id._serialized, {
       cmdName,
       author: event.senderID
     });
