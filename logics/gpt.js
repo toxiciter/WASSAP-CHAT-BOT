@@ -6,7 +6,7 @@ module.exports = {
     author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
     description: "For conversation with real chatGPT",
     category: "AI",
-    guide: "/gpt [YOUR MESSAGE]\n/gpt [YOUR MESSAGE] (with an image)\nexample: /gpt hey ki koro"
+    guide: "{pn} [your message]\n{pn} [your message] (with an image)\n{pn} [your message] (With reply of an image)\nexample: {pn} hey ki koro"
   },
 
   logic: async ({ api, args, event, cmdName }) => {
