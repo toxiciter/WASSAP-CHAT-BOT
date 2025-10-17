@@ -68,6 +68,10 @@ try {
         console.warn(`Missing "logic" function in command: ${file}`);
         continue;
       }
+
+      if (cmd.config.guide && typeof cmd.config.guide === "string") {
+        cmd.config.guide = cmd.config.guide.replace(/{pn}/g, prefix + cmd.config.name);
+      }
       
       commands.set(cmd.config.name.toLowerCase(), cmd);
       console.log(`[ COMMAND LOADED ]: ${cmd.config.name}`);
