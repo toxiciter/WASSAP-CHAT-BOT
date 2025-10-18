@@ -45,7 +45,9 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
     clientInitialized = true;
     client.initialize();
 
-
+    global.bot = {
+		client
+	}
     client.on('qr', async (qr) => {  
         console.log('[ QR RECEIVED ]:', qr);
         try {    
