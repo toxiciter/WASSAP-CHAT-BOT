@@ -19,7 +19,7 @@ module.exports = {
       }
       const media = await api.editpro(url, prompt);
       await api.sendMessage({ attachment: media, body: "ಠಿ⁠_⁠ಠಿ Edited...!!" }, event.chatID, event.messageID)
-        .then((info) => {
+        .then( async (info) => {
           global.onReply.set(info.id._serialized, {
             cmdName,
             author: event.senderID,
@@ -37,7 +37,7 @@ module.exports = {
       const prompt = event.body;
       const media = await api.editpro(url, prompt);
       await api.sendMessage({ attachment: media, body: "ಠಿ⁠_⁠ಠಿ Edited...!!" }, event.chatID, event.messageID)
-      .then((info) => {
+      .then( async (info) => {
         global.onReply.set(info.id._serialized, {
           cmdName,
           author: event.senderID,
