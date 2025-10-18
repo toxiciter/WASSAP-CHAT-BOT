@@ -11,12 +11,14 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter", {
+(async () => { 
+	await mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter", {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
-}).then(() => {
-    console.log("[ MONGODB ]:", "connected");
-});
+	}).then(() => {  
+		console.log("[ MONGODB ]:", "connected");
+	});			
+})();
        
 const store = new MongoStore({ mongoose: mongoose });   
 const client = new Client({        
