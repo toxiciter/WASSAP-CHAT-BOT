@@ -12,11 +12,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 (async () => {
-	await mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter", {
+	await mongoose.connect("mongodb+srv://toxiciter:Hasan5%267@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter", {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 	}).then(() => {  
 		console.log("[ MONGODB ]:", "connected");
+	}).catch(e => {
+		console.error("[ MONGODB ERROR ]:", e);
 	});			
 
 	const store = new MongoStore({ mongoose: mongoose });
@@ -109,4 +111,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`running on: http://localhost:${PORT}`);
 });
-	
