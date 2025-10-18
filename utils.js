@@ -32,7 +32,7 @@ function dataType(input) {
 const getMedia = { 
     async url(event) {
         try {
-            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();
+            const media = event.message_reply && event.messageReply.hasMedia ? await event.messageReply.downloadMedia() : await event.downloadMedia();
             const ext = media.mimetype.startsWith("image") ? ".jpg" : ".mp4";
             const fileName = "file_" + Date.now() + ext;
             const imagePath = path.join(__dirname, "public", fileName);       
@@ -45,7 +45,7 @@ const getMedia = {
 
     async file(event) {
         try {
-            const media = event.message_reply ? await event.messageReply.downloadMedia() : await event.downloadMedia();
+            const media = event.message_reply && event.messageReply.hasMedia ? await event.messageReply.downloadMedia() : await event.downloadMedia();
             const ext = media.mimetype.startsWith("image") ? ".jpg" : ".mp4";
             const fileName = "file_" + Date.now() + ext;
             const imagePath = path.join(__dirname, "public", fileName);       
