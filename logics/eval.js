@@ -1,7 +1,6 @@
 const axios = require("axios");
 const path = require("path");
 const fs = require("fs");
-const { client, commands } = global.bot;
 
 module.exports = {
 	config: {
@@ -12,7 +11,7 @@ module.exports = {
 		guide: "{pn} <code to test or URL>"
 	},
 
-	logic: async function ({ api, event, cmdName, args, wl }) {
+	logic: async function ({ api, event, cmdName, args, wl, commands, client }) {
 		const input = args.join(" ");
 		if(args[0].startsWith("https://")) {
 			api.sendMessage({ attachment: args[0] }, event.chatID, event.messageID);
