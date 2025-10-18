@@ -60,9 +60,6 @@ try {
   console.error("[ COMMAND LOADER ERROR ]:", outerErr);
 }
 
-global.bot = {
-    commands
-  };
 
 module.exports = async (event, client) => {
   const sendMessage = require("./sendMessage.js")(event, client);
@@ -101,7 +98,7 @@ module.exports = async (event, client) => {
           messageID
         );
       }
-      await cmd.logic({ api, event, args, cmdName: cmd.config.name, wl });
+      await cmd.logic({ api, event, args, cmdName: cmd.config.name, wl, commands, client });
       return;
     };
 
@@ -112,7 +109,7 @@ module.exports = async (event, client) => {
       for (const cmd of cmds) {
         const cm = commands.get(cmd);
         if (cm && cm.chat && typeof cm.chat === "function") {
-          await cm.chat({ api, event, cmdName: cm.config.name, args });
+          await cm.chat({ api, event, cmdName: cm.config.name, args, commands, client });
         }
       }
     };
@@ -123,7 +120,7 @@ module.exports = async (event, client) => {
       if (Reply) {
         const cmd = commands.get(Reply.cmdName);
         if (cmd && cmd.reply && typeof cmd.reply === "function") {
-          await cmd.reply({ Reply, api, event, cmdName: cmd.config.name });
+          await cmd.reply({ Reply, api, event, cmdName: cmd.config.name, commands, client });
         }
       }
     };
