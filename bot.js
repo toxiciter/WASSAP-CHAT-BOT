@@ -8,6 +8,7 @@ const { Client, RemoteAuth } = require('whatsapp-web.js');
 const { MongoStore } = require('wwebjs-mongo');
 const mongoose = require('mongoose');
 const app = express();
+global.bot = {};
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -45,9 +46,8 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
     clientInitialized = true;
     client.initialize();
 
-    global.bot = {
-		client
-	}
+	global.bot.client = client;
+    
     client.on('qr', async (qr) => {  
         console.log('[ QR RECEIVED ]:', qr);
         try {    
@@ -78,7 +78,7 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
 
 
     client.on('loading_screen', (percent, message) => {  
-        console.log("[ LOADING ]:", percent, message);
+        console.log("[ LOADING ]:", percent + "%", message);
     });
 
 
