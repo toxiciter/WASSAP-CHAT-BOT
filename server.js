@@ -26,7 +26,7 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
     const client = new Client({
         authStrategy: new RemoteAuth({
             store: store,
-            backupSyncIntervalMs: 300000       
+            backupSyncIntervalMs: 120000       
         }),
         puppeteer: {
             headless: true,
