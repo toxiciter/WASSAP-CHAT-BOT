@@ -58,20 +58,20 @@ const getMedia = {
 };
 
 function errorMessage(e) {
-  let message = `Error: ${e.message || 'No message'}\n`;
-  message += `Type: ${e.name || 'Unknown'}\n`;
+  let message = `Error: ${e.name || 'Unknown'}\n`;
+  message += `${e.message || 'no message'}\n\n`;
 
   // Axios specific error
   if (e.isAxiosError) {
     if (e.response) {
-      message += `Status: ${e.response.status}\n`;
-      message += `Server Response: ${JSON.stringify(e.response.data, null, 2)}\n`; // prettier JSON
+      message += `${e.response.status}\n`;
+      message += `${JSON.stringify(e.response.data, null, 2)}\n\n`;
     } else if (e.request) {
-      message += `No response received. Request details: ${e.request}\n`;
+      message += `${e.request}\n\n`;
     }
   }
 
-  message += `STACK:\n${e.stack || 'No stack available'}`;
+  message += `${e.stack || 'No stack available'}`;
 
   return message;
 };
