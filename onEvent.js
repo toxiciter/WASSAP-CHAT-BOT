@@ -93,7 +93,7 @@ module.exports = async (event, client) => {
 
       if (!cmd) {
         return sendMessage(
-          `༎ຶ⁠‿⁠༎ຶ Command '${cmdName}' does not exist.! Type '${prefix}help' to see all available command..!`,
+          `ಠಿ⁠_⁠ಠ Command \`${cmdName}\` does not exist.!\nType \`${prefix}help\` to see all available command..!`,
           chatID,
           messageID
         );
