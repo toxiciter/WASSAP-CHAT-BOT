@@ -18,7 +18,7 @@ module.exports = {
         return event.reply("Please provide an image to edit.");
       }
       const media = await api.edit(url, prompt);
-      await api.sendMessage({ attachment: media, body: "ಠಿ⁠_⁠ಠಿ Edited...!!" }, event.senderID, event.messageID);
+      await api.sendMessage({ attachment: media.url, body: media.response }, event.chatID, event.messageID);
     } catch (e) {
       throw e;
     }
