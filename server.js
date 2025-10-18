@@ -13,7 +13,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let clientInitialized = false;
 
-mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter").then(() => {
+mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter", {
+		useNewUrlParser: true,
+		useUnifiedTopology: true
+}).then(() => {
     console.log("[ MONGODB ]:", "connected");
     if (clientInitialized) {
       console.log("[ CLIENT ]: Already initialized, skipping...");
@@ -39,62 +42,68 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
         }
     });
 
-    clientInitialized = true; // ✅ ensure only once
+    clientInitialized = true;
     client.initialize();
 
-client.on('qr', async (qr) => {
-  console.log('[ QR RECEIVED ]:', qr);
 
-  try {
-    const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponent(qr)}`, { responseType: "stream" });
-    const qrPath = path.join(__dirname, "public", "qr.png");
-    const writer = fs.createWriteStream(qrPath);
-    data.pipe(writer);
-
-    writer.on('finish', async () => {
-      console.log('QR saved at:', qrPath);
-    });
-
-  } catch (error) {
-    console.error('QR generate error:', error);
-  }
-});
-
-client.on('ready', () => {
-  console.log('✅ Client is ready!');
-});
-
-client.on('authenticated', () => {
-  console.log('✅ AUTHENTICATED');
-});
-
-client.on('auth_failure', (msg) => {
-  console.error('❌ AUTH FAILURE:', msg);
-});
-
-client.on('loading_screen', (percent, message) => {
-  console.log("[ LOADING ]:", percent, message);
-});
-
-
-client.on('message_create', async (event) => {
-    const custom = Object.assign(event, {
-        senderID: await event._getChatId(),
-        messageID: event.id._serialized,
-        message_reply: event.hasQuotedMsg,
-        messageReply: await event.getQuotedMessage()
-    });
+    client.on('qr', async (qr) => {  
+        console.log('[ QR RECEIVED ]:', qr);
+        try {    
+            const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponent(qr)}`, { responseType: "stream" });    
+            const qrPath = path.join(__dirname, "public", "qr.png");
+            const writer = fs.createWriteStream(qrPath);    
+            data.pipe(writer);
     
-    
-    onEvent(custom, client);
-    console.log("[ EVENT ]:", {
-        body: event.body,
-        senderID: event.id.remote,
-        messageID: event.id._serialized,
-        isMedia: event.hasMedia,
-        message_reply: event.hasQuotedMsg
+            writer.on('finish', async () => {      
+                console.log('QR saved at:', qrPath);    
+            });  
+        } catch (error) {    
+            console.error('QR generate error:', error);     
+        }   
     });
-});
+
+    client.on('ready', () => {
+        console.log('✅ Client is ready!');
+    });
+
+    client.on('authenticated', () => {
+        console.log('✅ AUTHENTICATED');
+    });
+
+    client.on('auth_failure', (msg) => {
+        console.error('❌ AUTH FAILURE:', msg);
+    });
+
+
+    client.on('loading_screen', (percent, message) => {  
+        console.log("[ LOADING ]:", percent, message);
+    });
+
+
+    client.on('remote_session_saved', () => {
+        console.log("[ SESSION ]:", "Successfully saved");
+    });
+
+
+    client.on('message_create', async (event) => {
+    
+        const custom = Object.assign(event, {        
+            senderID: await event._getChatId(),
+            messageID: event.id._serialized,
+            message_reply: event.hasQuotedMsg,
+            messageReply: await event.getQuotedMessage()    
+        });
+        
+        onEvent(custom, client);
+    
+        console.log("[ EVENT ]:", {       
+            body: event.body,
+            senderID: event.id.remote,
+            messageID: event.id._serialized,
+            isMedia: event.hasMedia,
+            message_reply: event.hasQuotedMsg    
+        });
+    });
 });
 
 
