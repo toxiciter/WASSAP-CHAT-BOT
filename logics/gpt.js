@@ -22,7 +22,7 @@ module.exports = {
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
 
-    const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
+    const msg = await api.sendMessage(data.response, event.chatID, event.messageID);
 
     global.onReply.set(msg.id._serialized, {
       cmdName,
@@ -46,7 +46,7 @@ module.exports = {
       `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
     );
 
-    const msg = await api.sendMessage(data.response, event.senderID, event.messageID);
+    const msg = await api.sendMessage(data.response, event.chatID, event.messageID);
 
     global.onReply.set(msg.id._serialized, {
       cmdName,
