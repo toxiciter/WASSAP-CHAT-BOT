@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { dataType } = require("./utils");
 const onEvent = require("./onEvent.js");
 const { Client, RemoteAuth } = require('whatsapp-web.js');
 const { MongoStore } = require('wwebjs-mongo');
@@ -11,17 +10,18 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-let clientInitialized = false;
+//let clientInitialized = false;
 
 mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter", {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
 }).then(() => {
     console.log("[ MONGODB ]:", "connected");
-    if (clientInitialized) {
+});
+   /* if (clientInitialized) {
       console.log("[ CLIENT ]: Already initialized, skipping...");
       return;    
-    }
+    }*/
     const store = new MongoStore({ mongoose: mongoose });
     const client = new Client({
         authStrategy: new RemoteAuth({
@@ -42,7 +42,7 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
         }
     });
 
-    clientInitialized = true;
+    //clientInitialized = true;
     client.initialize();
     
     client.on('qr', async (qr) => {  
@@ -104,7 +104,7 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
             message_reply: event.hasQuotedMsg    
         });
     });
-});
+//});
 
 
 app.get('/qr', (req, res) => {
