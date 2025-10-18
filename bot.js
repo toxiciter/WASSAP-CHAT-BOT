@@ -87,8 +87,9 @@ mongoose.connect("mongodb+srv://toxiciter:Hasan5&7@toxiciter.9tkfu.mongodb.net/W
 
     client.on('message_create', async (event) => {
     
-        const custom = Object.assign(event, {        
-            senderID: await event._getChatId(),
+        const custom = Object.assign(event, {
+			senderID: event.from,
+            chatID: await event._getChatId(),
             messageID: event.id._serialized,
             message_reply: event.hasQuotedMsg,
             messageReply: await event.getQuotedMessage()    
