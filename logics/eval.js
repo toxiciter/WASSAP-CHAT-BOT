@@ -1,3 +1,8 @@
+const axios = require("axios");
+const path = require("path");
+const fs = require("fs");
+const { client, commands } = global.bot;
+
 module.exports = {
 	config: {
 		name: "eval",
@@ -7,8 +12,11 @@ module.exports = {
 		guide: "{pn} <code to test or URL>"
 	},
 
-	logic: async function ({ api, event, cmdName, args }) {
+	logic: async function ({ api, event, cmdName, args, wl }) {
 		const input = args.join(" ");
+		if(args[0].startsWith("https://")) {
+			api.sendMessage({ attachment: args[0] }, event.chatID, event.messageID);
+		}
 		
 		function output(msg) {
 			if (typeof msg === "function" || typeof msg === "boolean" || typeof msg === "number")
@@ -20,7 +28,7 @@ module.exports = {
 			else if (typeof msg === "undefined")
 				msg = "undefined";
 
-			api.sendMessage(msg, event.senderID, event.messageID);
+			api.sendMessage(msg, event.chatID, event.messageID);
 		}
 		function out(msg) {
 			output(msg);
@@ -35,8 +43,7 @@ module.exports = {
 		try {
 			await eval(`(async () => { ${input} })()`);
 		} catch (e) {
-			console.error(e.message);
-			event.reply(e.message);
+			throw e;
 		}
 	}
 };
