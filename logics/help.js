@@ -1,5 +1,3 @@
-const { commands } = global.bot;
-
 module.exports = {
   config: {
     name: "help",
@@ -9,7 +7,7 @@ module.exports = {
     guide: "{pn}\n{pn} <cmdname> to see how to use and details of that command"
   },
 
-  logic: async ({ api, event, args }) => {
+  logic: async ({ api, event, args, commands }) => {
     try {
       const cmds = [...commands.keys()];
       if (args.length && cmds.includes(args[0].toLowerCase())) {
