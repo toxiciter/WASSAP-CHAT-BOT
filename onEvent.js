@@ -79,11 +79,11 @@ module.exports = async (event, client) => {
   };
   
 
-    const { body, senderID, messageID } = event;
+    const { body, senderID, messageID, chatID } = event;
     if(!body) return;
 
   //[ CHECK PERMISSION ]
-    //if(!whitelisted.includes(event.author)) return;
+    //if(!whitelisted.includes(event.senderID)) return;
 
 
   try {
@@ -98,19 +98,25 @@ module.exports = async (event, client) => {
       if (!cmd) {
         return sendMessage(
           `ಠ⁠ᴥ⁠ಠ Command "${cmdName}" does not exist..!`,
-          senderID,
+          chatID,
           messageID
         );
       }
-      await cmd.logic({ api, event, args, cmdName, wl });
+      await cmd.logic({ api, event, args, cmdName: cmd.config.name, wl });
       return;
     };
 
 
-    /*[ CHAT ]
+    //[ CHAT ]
     if (event.body) {
-      
-    }*/
+      const cmds = [...commands.keys()];
+      for (const cmd of cmds) {
+        const cm = commands.get(cmd);
+        if (cm && cm.chat && typeof cm.chat === "function") {
+          await cm.chat({ api, event, cmdName: cm.config.name, args });
+        }
+      }
+    };
 
     //[ REPLY ]
     if (event.message_reply) {
@@ -118,13 +124,13 @@ module.exports = async (event, client) => {
       if (Reply) {
         const cmd = commands.get(Reply.cmdName);
         if (cmd && cmd.reply && typeof cmd.reply === "function") {
-          await cmd.reply({ Reply, api, event, cmdName: Reply.cmdName });
+          await cmd.reply({ Reply, api, event, cmdName: cmd.config.name });
         }
       }
     };
   } catch (err) {
     console.error("[ ERROR IN COMMAND ]:", err);
     const eMsg = errorMessage(err);
-    await api.sendMessage(eMsg, event.senderID, event.messageID);
+    await api.sendMessage(eMsg, event.chatID, event.messageID);
   }
 };
