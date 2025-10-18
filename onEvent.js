@@ -59,15 +59,14 @@ try {
 } catch (outerErr) {
   console.error("[ COMMAND LOADER ERROR ]:", outerErr);
 }
-    
+
+global.bot = {
+    commands
+  };
 
 module.exports = async (event, client) => {
   const sendMessage = require("./sendMessage.js")(event, client);
   const whitelisted = await wl.list();
-  global.bot = {
-    client,
-    commands
-  };
   
   
   const api = {
