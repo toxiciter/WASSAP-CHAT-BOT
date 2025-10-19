@@ -44,7 +44,8 @@ app.use(express.static(path.join(__dirname, 'public')));
             showNotification: true,
             intervalMs: 180000 // Time to renew pairing code in milliseconds, defaults to 3 minutes
      }
-	});	
+	});
+	return client;
 })();
     	
 client.initialize();
