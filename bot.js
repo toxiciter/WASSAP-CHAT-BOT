@@ -11,7 +11,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-(async () => {
+const client = (async () => {
 	await mongoose.connect("mongodb+srv://toxiciter:Hasan5%267@toxiciter.9tkfu.mongodb.net/WP-BOT-SESSION?retryWrites=true&w=majority&appName=Toxiciter", {
 		useNewUrlParser: true,
 		useUnifiedTopology: true
