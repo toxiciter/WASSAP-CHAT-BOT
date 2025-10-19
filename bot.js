@@ -44,80 +44,81 @@ app.use(express.static(path.join(__dirname, 'public')));
             showNotification: true,
             intervalMs: 180000 // Time to renew pairing code in milliseconds, defaults to 3 minutes
      }
-	});
-    
-	client.initialize();
-
-	client.on('loading_screen', (percent, message) => {  
-        console.log("[ LOADING ]:", percent + "%", message);
-    });
-	
-	client.on('qr', async (qr) => { 
-		console.log('[ QR RECEIVED ]:', qr);    
-		try {            
-			const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponent(qr)}`, { responseType: "stream" });    
-            const qrPath = path.join(__dirname, "public", "qr.png");
-            const writer = fs.createWriteStream(qrPath);    
-            data.pipe(writer);
-            writer.on('finish', async () => {
-				console.log('QR saved at:', qrPath);
-			});
-		} catch (error) {
-			console.error('QR generate error:', error);
-		}   
-	});
-
-	client.on('code', (code) => {    
-		console.log('[ PAIRING CODE ]:', code);
-	});
-
-	client.on('authenticated', () => {
-        console.log('✅ AUTHENTICATED');
-	});
-
-    client.on('auth_failure', (msg) => {
-        console.error('❌ AUTH FAILURE:', msg);
-    });
-    
-    client.on('remote_session_saved', () => {
-        console.log("[ SESSION ]:", "Successfully saved");
-    });
-
-	client.on('ready', () => {    
-		console.log('✅ Client is ready!');
-		
-		client.pupPage.on('pageerror', function(err) { 
-			console.log('[ PAGE ERROR ]: ' + err.toString());
-		});  
-		client.pupPage.on('error', function(err) {    
-			console.log('[ PAGE ERROR ]: ' + err.toString());   
-		});
-	});
-
-    client.on('message_create', async (event) => {    
-        const custom = Object.assign(event, {	
-		    senderID: event.from,
-            chatID: await event._getChatId(),
-            messageID: event.id._serialized,
-            message_reply: event.hasQuotedMsg,
-            messageReply: await event.getQuotedMessage()    
-        });
-        
-        onEvent(custom, client);
-    
-        console.log("[ EVENT ]:", {       
-            body: event.body,
-            senderID: event.id.remote,
-            messageID: event.id._serialized,
-            isMedia: event.hasMedia,
-            message_reply: event.hasQuotedMsg    
-        });
-    });
-	
-	client.on('disconnected', (reason) => {
-        console.log('[ CLIENT DISCONNECTED ]: ', reason);
-    });
+	});	
 })();
+    	
+client.initialize();
+
+client.on('loading_screen', (percent, message) => {  
+    console.log("[ LOADING ]:", percent + "%", message);
+});
+	
+client.on('qr', async (qr) => { 
+	console.log('[ QR RECEIVED ]:', qr);    
+	try {            
+		const { data } = await axios.get(`https://quickchart.io/qr?text=${encodeURIComponent(qr)}`, { responseType: "stream" });    
+        const qrPath = path.join(__dirname, "public", "qr.png");
+        const writer = fs.createWriteStream(qrPath);    
+        data.pipe(writer);
+        writer.on('finish', async () => {
+			console.log('QR saved at:', qrPath);
+		});
+	} catch (error) {
+		console.error('QR generate error:', error);
+	}   
+});
+
+client.on('code', (code) => {    
+	console.log('[ PAIRING CODE ]:', code);
+});
+
+client.on('authenticated', () => {
+    console.log('[ AUTHENTICATION ]:', "Successfully authenticated ✅");
+});
+   
+client.on('auth_failure', (msg) => {
+    console.error('[ AUTH FAILURE ]:', msg);
+});
+    
+client.on('remote_session_saved', () => {
+    console.log("[ SESSION ]:", "Successfully saved");
+});
+
+client.on('ready', () => {    
+	console.log('✅ Client is ready!');
+		
+	client.pupPage.on('pageerror', function(err) { 
+		console.log('[ PAGE ERROR ]: ' + err.toString());
+	});  
+		
+	client.pupPage.on('error', function(err) {    
+		console.log('[ PAGE ERROR ]: ' + err.toString());   
+	});
+});
+
+client.on('message_create', async (event) => {    
+    const custom = Object.assign(event, {	
+		senderID: event.from,
+        chatID: await event._getChatId(),
+        messageID: event.id._serialized,
+        message_reply: event.hasQuotedMsg,
+        messageReply: await event.getQuotedMessage()    
+    });
+        
+    onEvent(custom, client);
+    
+    console.log("[ EVENT ]:", {       
+        body: event.body,
+        senderID: event.id.remote,
+        messageID: event.id._serialized,
+        isMedia: event.hasMedia,
+        message_reply: event.hasQuotedMsg    
+    });
+});
+	
+client.on('disconnected', (reason) => {
+    console.log('[ CLIENT DISCONNECTED ]: ', reason);
+});
 
 
 app.get('/qr', (req, res) => {
