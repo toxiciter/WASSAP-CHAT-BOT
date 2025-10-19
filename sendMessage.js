@@ -2,7 +2,7 @@ const { MessageMedia } = require("whatsapp-web.js");
 const { dataType } = require("./utils.js");
 
 module.exports = (event, client) => {
-  return async (msg, chatID, messageReply) => {
+  return async (msg, chatID, messageID) => {
     try {
       
       if (!(typeof chatID === "string" || Array.isArray(chatID))) {
@@ -16,9 +16,9 @@ module.exports = (event, client) => {
         if (!attachment) {
           
           if (Array.isArray(chatID)) {
-            return await Promise.all(chatID.map(id => client.sendMessage(id, body, { quotedMessageId: messageReply || "" })));
+            return await Promise.all(chatID.map(id => send({ body }, id, messageID)));
           } else {
-            return await client.sendMessage(chatID, body, { quotedMessageId: messageReply || "" });
+            return await send({ body }, chatID, messageID);
           }
         };
 
@@ -34,11 +34,11 @@ module.exports = (event, client) => {
               if (Array.isArray(chatID)) {
                 return await Promise.all(
                   chatID.map(id =>
-                    client.sendMessage(id, media, { caption: body, quotedMessageId: messageReply || "" })
+                    send({ media, body }, id, messageID)
                   )
                 );
               } else {
-                return await client.sendMessage(chatID, media, { caption: body, quotedMessageId: messageReply || "" });
+                return await send({ media, body }, chatID, messageID);
               }
             })
           );
@@ -53,22 +53,41 @@ module.exports = (event, client) => {
           if (Array.isArray(chatID)) {
             return await Promise.all(
               chatID.map(id =>
-                client.sendMessage(id, media, { caption: body, quotedMessageId: messageReply || "" })
+                send({ media, body }, id, messageID)
               )
             );
           } else {
-            return await client.sendMessage(chatID, media, { caption: body, quotedMessageId: messageReply || "" });
+            return await send({ media, body }, chatID, messageID);
           }
         }
       } 
 
       else if (typeof msg === "string") {
         if (Array.isArray(chatID)) {
-          return await Promise.all(chatID.map(id => client.sendMessage(id, msg, { quotedMessageId: messageReply || "" })));
+          return await Promise.all(chatID.map(id => send({ body: msg }, id, messageID)));
         } else {
-          return await client.sendMessage(chatID, msg, { quotedMessageId: messageReply || "" });
+          return await send({ body: msg }, chatID, messageID);
         }
       }
+
+      async function send(content = {}, id, reply = "") {
+        const { media, body = "" } = content;
+        const finalContent = media ? media : body;
+        const caption = media ? body : "";
+        
+        const msg = await client.sendMessage(id, finalContent, {
+          caption: caption,
+          quotedMessageId: reply
+        });
+        
+        const cMsg = Object.assign(msg, {
+          senderID: msg.from,
+          chatID: msg._getChatId(),
+          messageID: msg.id._serialized
+        });
+        
+        return cMsg;
+      };
 
     } catch (err) {
       throw err;;
