@@ -38,10 +38,19 @@ app.use(express.static(path.join(__dirname, 'public')));
                 '--no-first-run',
                 '--no-zygote'		
 			]    
-		}
+		},		
+		pairWithPhoneNumber: {
+			phoneNumber: '8801838520844', // Pair with phone number (format: <COUNTRY_CODE><PHONE_NUMBER>)
+            showNotification: true,
+            intervalMs: 180000 // Time to renew pairing code in milliseconds, defaults to 3 minutes
+     }
 	});
     
 	await client.initialize();
+
+	client.on('loading_screen', (percent, message) => {  
+        console.log("[ LOADING ]:", percent + "%", message);
+    });
 	
 	client.on('qr', async (qr) => { 
 		console.log('[ QR RECEIVED ]:', qr);    
@@ -58,8 +67,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 		}   
 	});
 
-	client.on('ready', () => {    
-		console.log('✅ Client is ready!');
+	client.on('code', (code) => {    
+		console.log('[ PAIRING CODE ]:', code);
 	});
 
 	client.on('authenticated', () => {
@@ -69,14 +78,14 @@ app.use(express.static(path.join(__dirname, 'public')));
     client.on('auth_failure', (msg) => {
         console.error('❌ AUTH FAILURE:', msg);
     });
-
-    client.on('loading_screen', (percent, message) => {  
-        console.log("[ LOADING ]:", percent + "%", message);
-    });
-
+    
     client.on('remote_session_saved', () => {
         console.log("[ SESSION ]:", "Successfully saved");
     });
+
+	client.on('ready', () => {    
+		console.log('✅ Client is ready!');
+	});
 
     client.on('message_create', async (event) => {    
         const custom = Object.assign(event, {	
