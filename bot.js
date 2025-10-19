@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 			]    
 		},		
 		pairWithPhoneNumber: {
-			phoneNumber: '8801838520844', // Pair with phone number (format: <COUNTRY_CODE><PHONE_NUMBER>)
+			phoneNumber: '8801971739216', // Pair with phone number (format: <COUNTRY_CODE><PHONE_NUMBER>)
             showNotification: true,
             intervalMs: 180000 // Time to renew pairing code in milliseconds, defaults to 3 minutes
      }
