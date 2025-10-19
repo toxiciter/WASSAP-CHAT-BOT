@@ -96,14 +96,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 	});
 
 	client.on('message_create', async (event) => {
+		if (event.hasQuotedMsg) {
+			const mp = await event.getQuotedMessage();
+			const cmp = Object.assign(mp, {
+				senderID: mp.from,
+				chatID: await mp._getChatId(),
+				messageID: mp.id._serialized,
+				messageReact: await mp.getReactions(),
+				chat: await mp.getChat(),
+				contact: await mp.getContact()
+			});
+		}
 		const custom = Object.assign(event, {
 			senderID: event.from,
 			chatID: await event._getChatId(),
 			messageID: event.id._serialized,
 			message_reply: event.hasQuotedMsg,
-			messageReply: await event.getQuotedMessage(),
+			messageReact: await event.getReactions(),
+			messageReply: cmp,
 			chat: await event.getChat(),
-			user: await event.getContact()
+			contact: await event.getContact()
 		});
         
 		onEvent(custom, client);
