@@ -23,10 +23,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 	const store = new MongoStore({ mongoose: mongoose });
 	const client = new Client({
-		authStrategy: new RemoteAuth({	
+		/*authStrategy: new RemoteAuth({	
 			store: store,	
 			backupSyncIntervalMs: 600000	
-		}),	
+		}),	*/
 		puppeteer: {		
 			headless: true,		
 			args: [			
@@ -40,13 +40,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 			]    
 		},		
 		pairWithPhoneNumber: {
-			phoneNumber: '8801971739216', // Pair with phone number (format: <COUNTRY_CODE><PHONE_NUMBER>)
+			phoneNumber: '8801838520844', // Pair with phone number (format: <COUNTRY_CODE><PHONE_NUMBER>)
             showNotification: true,
             intervalMs: 180000 // Time to renew pairing code in milliseconds, defaults to 3 minutes
      }
 	});
     
-	await client.initialize();
+	client.initialize();
 
 	client.on('loading_screen', (percent, message) => {  
         console.log("[ LOADING ]:", percent + "%", message);
@@ -85,6 +85,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 	client.on('ready', () => {    
 		console.log('✅ Client is ready!');
+		
+		client.pupPage.on('pageerror', function(err) { 
+			console.log('[ PAGE ERROR ]: ' + err.toString());
+		});  
+		client.pupPage.on('error', function(err) {    
+			console.log('[ PAGE ERROR ]: ' + err.toString());   
+		});
 	});
 
     client.on('message_create', async (event) => {    
@@ -105,7 +112,11 @@ app.use(express.static(path.join(__dirname, 'public')));
             isMedia: event.hasMedia,
             message_reply: event.hasQuotedMsg    
         });
-    });	
+    });
+	
+	client.on('disconnected', (reason) => {
+        console.log('[ CLIENT DISCONNECTED ]: ', reason);
+    });
 })();
 
 
