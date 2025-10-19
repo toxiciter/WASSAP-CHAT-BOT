@@ -101,7 +101,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 			chatID: await event._getChatId(),
 			messageID: event.id._serialized,
 			message_reply: event.hasQuotedMsg,
-			messageReply: await event.getQuotedMessage()
+			messageReply: await event.getQuotedMessage(),
+			chat: await event.getChat(),
+			user: await event.getContact()
 		});
         
 		onEvent(custom, client);
