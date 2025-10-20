@@ -83,7 +83,9 @@ module.exports = (event, client) => {
         const cMsg = Object.assign(msg, {
           senderID: msg.from,
           chatID: msg._getChatId(),
-          messageID: msg.id._serialized
+          messageID: msg.id._serialized,
+          chat: await msg.getChat(),
+          messageReact: await msg.getReactions()
         });
         
         return cMsg;
