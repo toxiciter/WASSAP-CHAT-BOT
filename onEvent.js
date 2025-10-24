@@ -117,7 +117,7 @@ module.exports = async (event, client) => {
 
     //[ REPLY ]
     if (event.message_reply) {
-      const Reply = global.onReply.get(event.messageReply.id._serialized);
+      const Reply = await global.onReply.get(event.messageReply.messageID);
       if (Reply) {
         const cmd = commands.get(Reply.cmdName);
         if (cmd && cmd.reply && typeof cmd.reply === "function") {
