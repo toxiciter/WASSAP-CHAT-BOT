@@ -15,7 +15,7 @@ const linkSchema = new mongoose.Schema({
   link: String
 });
 methods(linkSchema);
-const links = mongoose.model('links', linkSchema);
+const Link = mongoose.model('Link', linkSchema);
 
 
 const MessageSchema = new mongoose.Schema({
@@ -32,6 +32,6 @@ const toxicHistory = mongoose.model("toxicHistory", ToxicHistorySchema);
 
 module.exports = {
   onReply,
-  links,
+  Link,
   toxicHistory
 };
