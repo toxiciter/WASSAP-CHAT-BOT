@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { URL } = require("url");
 const path = require("path");
-const whiteList = require(path.join(__dirname, "API", "models", "WhiteListed.js"));
+const { whiteList } = require(path.join(__dirname, "API", "models", "mongodb.js"));
 
 
 function dataType(input) {
