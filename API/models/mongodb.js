@@ -30,8 +30,16 @@ methods(ToxicHistorySchema);
 const toxicHistory = mongoose.model("toxicHistory", ToxicHistorySchema);
 
 
+const whitelistSchema = new mongoose.Schema({
+  whitelisted: { type: [String], default: ["8801843152929@c.us"] }
+});
+methods(whitelistSchema);
+const whiteList = mongoose.model("whiteList", whitelistSchema);
+
+
 module.exports = {
   onReply,
   Link,
-  toxicHistory
+  toxicHistory,
+  whiteList
 };
