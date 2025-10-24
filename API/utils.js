@@ -380,7 +380,7 @@ function fileName(ext) {
 };
 
 async function upload(response, filename) {
-const uploadFolder = path.join(__dirname, 'images');
+const uploadFolder = path.join(__dirname, 'public');
 
 const filePath = path.join(uploadFolder, filename);
 const writer = fs.createWriteStream(filePath);
@@ -399,13 +399,13 @@ await new Promise((resolve, reject) => {
         console.log(`✅ Deleted file: ${filename}`);
       }
     });
-  }, 5 * 60 * 1000);
-  return fs.createReadStream(filePath);
+  }, 5 * 1000);
+  return filePath;
 }
 
 
 async function downloadFromUrl(url, filename) {
-  const df = path.join(__dirname, "downloads");
+  const df = path.join(__dirname, "public");
   const filePath = path.join(df, filename);
   
   const response = await axios.get(url, { responseType: 'stream', headers: {
@@ -426,8 +426,8 @@ async function downloadFromUrl(url, filename) {
         console.log(`✅ Deleted file: ${filename}`);
       }
     });
-  }, 1 * 60 * 1000);
-  return fs.createReadStream(filePath);
+  }, 5 * 1000);
+  return filePath;
 }
 
 async function api() {
