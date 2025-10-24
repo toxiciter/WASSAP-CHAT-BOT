@@ -37,6 +37,15 @@ const getMedia = {
             const fileName = "file_" + Date.now() + ext;
             const imagePath = path.join(__dirname, "public", fileName);       
             fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
+            setTimeout(() => {
+                fs.unlink(imagePath, (err) => {
+                    if (err) {
+                        console.error(`❌ Error deleting ${filename}:`, err.message);
+                    } else {
+                        console.log(`✅ Deleted file: ${filename}`);
+                    }
+                });
+            }, 5 * 1000);
             return "https://wassap-chat-bot.onrender.com/" + fileName;     
         } catch (e) {                
             throw e;      
@@ -50,6 +59,15 @@ const getMedia = {
             const fileName = "file_" + Date.now() + ext;
             const imagePath = path.join(__dirname, "public", fileName);       
             fs.writeFileSync(imagePath, media.data, { encoding: "base64" });
+            setTimeout(() => {
+                fs.unlink(imagePath, (err) => {
+                    if (err) {
+                        console.error(`❌ Error deleting ${filename}:`, err.message);
+                    } else {
+                        console.log(`✅ Deleted file: ${filename}`);
+                    }
+                });
+            }, 5 * 1000);
             return imagePath;
         } catch (e) {
             throw e;
