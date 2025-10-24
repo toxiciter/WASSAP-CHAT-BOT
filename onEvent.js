@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const map = require(path.join(__dirname, "API", "models", "mongoMap.js"));
 const { getMedia, wl, errorMessage } = require("./utils.js");
 const prefix = "/";
 
@@ -18,7 +19,7 @@ const {
 })();
 
 
-global.onReply = new Map();
+global.onReply = map;
 const commands = new Map();
     
 // [ LOAD COMMAND ]
