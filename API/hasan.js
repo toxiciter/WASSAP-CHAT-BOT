@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const cheerio = require("cheerio");
 const crypto = require('crypto');
-const Link = require("./models/Link.js");
+const { Link } = require("./models/mongodb.js");
 //const { GoogleGenAI, Modality } = require("@google/genai");
 //const Link = require('./models/Link');
 const { spawn } = require("child_process");
@@ -25,11 +25,11 @@ const {
      } = require('./utils');
 const { tokens, VYRO_API, HG_API } = require("./config");
 
-const DOWNLOAD_FOLDER = path.join(__dirname, "downloads");
+const DOWNLOAD_FOLDER = path.join(__dirname, "public");
 if (!fs.existsSync(DOWNLOAD_FOLDER)) {
     fs.mkdirSync(DOWNLOAD_FOLDER);
 };
-const uploadFolder = path.join(__dirname, 'images');
+const uploadFolder = path.join(__dirname, 'public');
 if (!fs.existsSync(uploadFolder)) {
     fs.mkdirSync(uploadFolder);
 };
