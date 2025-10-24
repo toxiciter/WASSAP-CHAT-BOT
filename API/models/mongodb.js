@@ -1,41 +1,37 @@
 const mongoose = require("mongoose");
+const methods = require("./helper.js");
 
 
-const mapSchema = new mongoose.Schema({
-  key: { type: String, required: true, unique: true },
-  value: { type: mongoose.Schema.Types.Mixed },
+const onReplySchema = new mongoose.Schema({
+  messageID: String,
+  data: Object
 });
+methods(onReplySchema);
+const onReply = mongoose.model("onReply", onReplySchema);
 
-const MapModel = mongoose.model("MapModel", mapSchema);
+
+const linkSchema = new mongoose.Schema({
+  category: String,
+  link: String
+});
+methods(linkSchema);
+const Link = mongoose.model('Link', linkSchema);
+
+
+const MessageSchema = new mongoose.Schema({
+  role: String,
+  content: String
+});
+const ToxicHistorySchema = new mongoose.Schema({
+  uid: { type: String, required: true, unique: true },
+  messages: [MessageSchema]
+});
+methods(ToxicHistorySchema);
+const toxicHistory = mongoose.model("toxicHistory", ToxicHistorySchema);
+
 
 module.exports = {
-  async set(key, value) {
-    await MapModel.findOneAndUpdate(
-      { key },
-      { value },
-      { upsert: true, new: true }
-    );
-  },
-
-  async get(key) {
-    const data = await MapModel.findOne({ key });
-    return data ? data.value : undefined;
-  },
-
-  async has(key) {
-    return !!(await MapModel.exists({ key }));
-  },
-
-  async delete(key) {
-    await MapModel.deleteOne({ key });
-  },
-
-  async clear() {
-    await MapModel.deleteMany({});
-  },
-
-  async entries() {
-    const docs = await MapModel.find({});
-    return docs.map((doc) => [doc.key, doc.value]);
-  },
+  onReply,
+  Link,
+  toxicHistory
 };
