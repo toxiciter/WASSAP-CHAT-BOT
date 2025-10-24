@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { TOXIC_API, TOXIC_API_2 } = require("./config");
 const { fallBack } = require("./utils");
-const ToxicHistory = require("./models/ToxicHistory.js");
+const { toxicHistory } = require("./models/mongodb.js");
 
 const toxicPrompt = {
   role: "system",
@@ -130,27 +130,24 @@ async function toxiciter(msg, uid) {
 	}	
   
   try {
-    let userHistory = await ToxicHistory.findOne({ uid });
+    let userHistory = await toxicHistory.findOne({ uid });
 
     if (msg.toLowerCase() === "clear") {
       if (!userHistory) {
-        userHistory = new ToxicHistory({ uid, messages: [toxicPrompt] });
+        userHistory = new toxicHistory({ uid, messages: [toxicPrompt] });
       } else {
         userHistory.messages = [toxicPrompt];
       }
       await userHistory.save();
 
       return `chat history cleared for UID: ${uid} 🧹🧠`;
-    }
-
-   if (msg.toLowerCase() === "clear all") {
-      await ToxicHistory.deleteMany({});
-
+    } else if (msg.toLowerCase() === "clear all") {
+      await toxicHistory.deleteMany({});
       return "All chat histories fully deleted 🚮🗑️";
    }
 
     if (!userHistory) {
-      userHistory = new ToxicHistory({ uid, messages: [toxicPrompt] });
+      userHistory = new toxicHistory({ uid, messages: [toxicPrompt] });
     }
 
     userHistory.messages.push({ role: "user", content: msg });
