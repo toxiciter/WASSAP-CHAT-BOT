@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     libpangocairo-1.0-0 \
     libpango-1.0-0 \
-    libgobject-2.0-0 \
+    libglib2.0-0 \
     libgtk-3-0 \
     libnss3 \
     libxss1 \
@@ -29,14 +29,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# copy package files first for better caching
 COPY package*.json ./
 RUN npm install --production
 
 COPY . .
 
-# If you need to allow chromium to run with no-sandbox
-ENV PUPPETEER_EXECUTABLE_PATH=""
+# Puppeteer env
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=false
+ENV PUPPETEER_EXECUTABLE_PATH=""
 
 CMD ["node", "bot.js"]
