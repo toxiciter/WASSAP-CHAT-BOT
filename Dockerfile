@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:18-slim
+FROM node:20-slim
 
 # Install dependencies required by Chromium / Puppeteer
 RUN apt-get update && apt-get install -y \
