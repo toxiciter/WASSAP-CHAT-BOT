@@ -25,7 +25,7 @@ module.exports = {
           `│ 𝑇ℎ𝑒 𝑐𝑜𝑛𝑡𝑒𝑛𝑡 𝑖𝑛𝑠𝑖𝑑𝑒 ♡︎ 𝐇𝐀𝐒𝐀𝐍 ♡︎ 𝑐𝑎𝑛 𝑏𝑒 𝑐ℎ𝑎𝑛𝑔𝑒𝑑\n` +
           `│ ♕︎ 𝐎𝐖𝐍𝐄𝐑 ♕︎:☠︎︎ 𝙃𝘼𝙎𝘼𝙉 ☠︎︎\n` +
           `╰━━━━━━━❖`;
-        api.sendMessage(response, event.chatID, event.messageID)
+        return api.sendMessage(response, event.chatID, event.messageID)
       }
       let message = "╔══════════════╗\n🔹 𝑪𝑶𝑴𝑴𝑨𝑵𝑫 𝑳𝑰𝑺𝑻 🔹\n╚══════════════╝\n";
 
