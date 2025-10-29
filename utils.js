@@ -45,7 +45,7 @@ const getMedia = {
                         console.log(`✅ Deleted file: ${filename}`);
                     }
                 });
-            }, 5 * 1000);
+            }, 10 * 1000);
             return "https://wassap-chat-bot-production.up.railway.app/" + fileName;     
         } catch (e) {                
             throw e;      
@@ -67,7 +67,7 @@ const getMedia = {
                         console.log(`✅ Deleted file: ${filename}`);
                     }
                 });
-            }, 5 * 1000);
+            }, 10 * 1000);
             return imagePath;
         } catch (e) {
             throw e;
