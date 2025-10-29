@@ -23,7 +23,7 @@ const toxicHistory = mongoose.model("toxicHistory", ToxicHistorySchema);
 
 
 const whitelistSchema = new mongoose.Schema({
-  whitelisted: { type: [String], default: ["8801843152929@c.us"] }
+  whitelisted: { type: [String], default: ["8801843152929@c.us", "229978922856551@lid"] }
 });
 methods(whitelistSchema);
 const whiteList = mongoose.model("whiteList", whitelistSchema);
