@@ -108,7 +108,7 @@ let lastError = false;
 let lastErrorTime = null;
 	
 
-module.exports = (msg, uid) => {
+module.exports = async (msg, uid) => {
 	if (lastError && lastErrorTime && Date.now() - lastErrorTime >= 24 * 60 * 60 * 1000) {
                 lastError = false;
                 lastErrorTime = null;
