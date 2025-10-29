@@ -72,7 +72,7 @@ module.exports = async (event, client) => {
     dalle_3, imagine, imagine_2, art, img2img,
     text2song, swap, tools, removebg, alldl,
     prompt, prompt_2, gpt, flux, changebg, flag,
-    font, quiz, album, permission, xnxx, yt, tiktokVideo, grok 
+    font, quiz, album, permission, xnxx, yt, tiktokVideo, grok, toxiciter: require(path.join(dirname, "API", "toxiciter.js"))
   };
   
 
