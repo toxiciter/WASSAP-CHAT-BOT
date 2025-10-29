@@ -45,7 +45,7 @@ const getMedia = {
                         console.log(`✅ Deleted file: ${fileName}`);
                     }
                 });
-            }, 10 * 1000);
+            }, 20 * 1000);
             return "https://wassap-chat-bot-production.up.railway.app/" + fileName;     
         } catch (e) {                
             throw e;      
@@ -67,7 +67,7 @@ const getMedia = {
                         console.log(`✅ Deleted file: ${fileName}`);
                     }
                 });
-            }, 10 * 1000);
+            }, 20 * 1000);
             return imagePath;
         } catch (e) {
             throw e;
@@ -76,7 +76,7 @@ const getMedia = {
 };
 
 function errorMessage(e) {
-  let message = `Error: ${e.name || 'Unknown'}\n`;
+  let message = `${e.name || 'Unknown'}\n`;
   message += `${e.message || 'no message'}\n\n`;
 
   // Axios specific error
