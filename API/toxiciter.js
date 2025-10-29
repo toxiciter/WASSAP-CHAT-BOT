@@ -108,7 +108,7 @@ let lastError = false;
 let lastErrorTime = null;
 	
 
-async function toxiciter(msg, uid) {
+module.exports = (msg, uid) => {
 	if (lastError && lastErrorTime && Date.now() - lastErrorTime >= 24 * 60 * 60 * 1000) {
                 lastError = false;
                 lastErrorTime = null;
@@ -184,5 +184,3 @@ async function toxiciter(msg, uid) {
     throw new Error(error.message);
   }
 };
-      
-module.exports = { toxiciter };
