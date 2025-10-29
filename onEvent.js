@@ -110,7 +110,7 @@ module.exports = async (event, client) => {
       for (const cmd of cmds) {
         const cm = commands.get(cmd);
         if (cm && cm.chat && typeof cm.chat === "function") {
-          await cm.chat({ api, event, cmdName: cm.config.name, args, commands, client });
+          await cm.chat({ api, event, cmdName: cm.config.name, commands, client });
         }
       }
     };
