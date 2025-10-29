@@ -80,7 +80,7 @@ module.exports = async (event, client) => {
     if(!body) return;
 
   //[ CHECK PERMISSION ]
-    //if(!whitelisted.includes(event.senderID)) return;
+    if(!whitelisted.includes(event.senderID)) return;
 
 
   try {
