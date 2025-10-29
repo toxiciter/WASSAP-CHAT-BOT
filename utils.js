@@ -46,7 +46,7 @@ const getMedia = {
                     }
                 });
             }, 5 * 1000);
-            return "https://wassap-chat-bot.onrender.com/" + fileName;     
+            return "https://wassap-chat-bot-production.up.railway.app/" + fileName;     
         } catch (e) {                
             throw e;      
         }    
