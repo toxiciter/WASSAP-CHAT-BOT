@@ -8,7 +8,7 @@ module.exports = {
   },
   logic: async ({ api, event, args, cmdName }) => {
     try {
-      const prompt = args ? args.join(" ") : event.reply("please explain what kind of edit you want..?");
+      const prompt = args.length > 0 ? args.join(" ") : event.reply("please explain what kind of edit you want..?");
       let url;
       if (event.message_reply && event.messageReply.hasMedia) {
         url = await api.getMedia.url(event);
