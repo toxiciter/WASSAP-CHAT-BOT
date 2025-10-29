@@ -40,9 +40,9 @@ const getMedia = {
             setTimeout(() => {
                 fs.unlink(imagePath, (err) => {
                     if (err) {
-                        console.error(`❌ Error deleting ${filename}:`, err.message);
+                        console.error(`❌ Error deleting ${fileName}:`, err.message);
                     } else {
-                        console.log(`✅ Deleted file: ${filename}`);
+                        console.log(`✅ Deleted file: ${fileName}`);
                     }
                 });
             }, 10 * 1000);
@@ -62,9 +62,9 @@ const getMedia = {
             setTimeout(() => {
                 fs.unlink(imagePath, (err) => {
                     if (err) {
-                        console.error(`❌ Error deleting ${filename}:`, err.message);
+                        console.error(`❌ Error deleting ${fileName}:`, err.message);
                     } else {
-                        console.log(`✅ Deleted file: ${filename}`);
+                        console.log(`✅ Deleted file: ${fileName}`);
                     }
                 });
             }, 10 * 1000);
