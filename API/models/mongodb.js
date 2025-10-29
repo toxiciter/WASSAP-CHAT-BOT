@@ -2,14 +2,6 @@ const mongoose = require("mongoose");
 const methods = require("./helper.js");
 
 
-const onReplySchema = new mongoose.Schema({
-  messageID: String,
-  data: Object
-});
-methods(onReplySchema);
-const onReply = mongoose.model("onReply", onReplySchema);
-
-
 const linkSchema = new mongoose.Schema({
   category: String,
   link: String
@@ -38,7 +30,6 @@ const whiteList = mongoose.model("whiteList", whitelistSchema);
 
 
 module.exports = {
-  onReply,
   Link,
   toxicHistory,
   whiteList
