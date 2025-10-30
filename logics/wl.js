@@ -7,13 +7,13 @@ module.exports = {
     guide: "{pn} [add | -a] <uid> or reply to a message of that user\n{pn} [remove | -r] <uid> or or reply to a message of that user\n{pn} [list | -l]"
   },
   logic: async ({ wl, event, args, client }) => {
-    const uid = event.message_reply ? event.messageReply.senderID : args[1];
-    const contact = await client.getContactById(uid);
+    const uid = event.message_reply ? event.messageReply.contact.id.serialized : args[1];
     const whitelisted = await wl.list();
     
     switch (args[0]) {  
       case "add":
       case "-a": {
+        const contact = await client.getContactById(uid);
         if (!whitelisted.includes(uid)) {
         await wl.add(uid);
         return event.reply(`✅ Successfully added ${contact.pushname} to whitelist`);
@@ -24,6 +24,7 @@ module.exports = {
 
       case "remove":
       case "-r": {
+        const contact = await client.getContactById(uid);
         if (whitelisted.includes(uid)) {
         await wl.remove(uid);
         return event.reply(`❌ Removed ${contact.pushname} from whitelist.`);
