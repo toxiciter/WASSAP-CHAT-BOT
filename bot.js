@@ -100,7 +100,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 		if (event.hasQuotedMsg) {
 			const mr = await event.getQuotedMessage();
 			cmr = Object.assign(mr, {
-				senderID: mr.from,
+				senderID: mr.author,
 				chatID: await mr._getChatId(),
 				messageID: mr.id._serialized,
 				messageReact: await mr.getReactions(),
