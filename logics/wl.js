@@ -7,7 +7,7 @@ module.exports = {
     guide: "{pn} [add | -a] <uid> or reply to a message of that user\n{pn} [remove | -r] <uid> or or reply to a message of that user\n{pn} [list | -l]"
   },
   logic: async ({ wl, event, args, client }) => {
-    const uid = event.message_reply ? event.messageReply.contact.id.serialized : args[1];
+    const uid = event.message_reply ? event.messageReply.contact.id._serialized : args[1];
     const whitelisted = await wl.list();
     
     switch (args[0]) {  
