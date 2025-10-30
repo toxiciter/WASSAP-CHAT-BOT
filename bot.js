@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 	const client = new Client({
 		authStrategy: new RemoteAuth({	
 			store: store,	
-			backupSyncIntervalMs: 300000	
+			backupSyncIntervalMs: 180000	
 		}),
 		puppeteer: {		
 			headless: true,		
