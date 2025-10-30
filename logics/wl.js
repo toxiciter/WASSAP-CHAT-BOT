@@ -9,22 +9,36 @@ module.exports = {
   logic: async ({ wl, event, args, client }) => {
     const uid = event.message_reply ? event.messageReply.senderID : args[1];
     const contact = await client.getContactById(uid);
+    const whitelisted = await wl.list();
+    
     switch (args[0]) {  
       case "add":
       case "-a": {
+        if (!whitelisted.includes(uid)) {
         await wl.add(uid);
         return event.reply(`✅ Successfully added ${contact.pushname} to whitelist`);
+        } else {
+          return event.reply(`The user ${contact.pushname} already in whitelist`);
+        }
       }
 
       case "remove":
       case "-r": {
+        if (whitelisted.includes(uid)) {
         await wl.remove(uid);
-        return event.reply(`❌ Removed ${contact.pushname} from whitelist`);
+        return event.reply(`❌ Removed ${contact.pushname} from whitelist.`);
+        } else {
+          return event.reply(`${contact.pushname} was not in whitelist.`)
+        }
       }
       case "list":
       case "-l": {
-        const list = await wl.list();
-        return event.reply(`WHITELIST USER\nlist.join("\n")`);
+        let msg = "WHITELISTED USER\n\n";
+        for (const id of whitelisted) {
+          const name = (await client.getContactById(id)).pushname;
+          msg += `• ${name}\n`
+        }
+        return event.reply(msg);
       }
         
 
