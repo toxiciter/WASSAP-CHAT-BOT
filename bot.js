@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 	const client = new Client({
 		authStrategy: new RemoteAuth({	
 			store: store,	
-			backupSyncIntervalMs: 600000	
+			backupSyncIntervalMs: 1800000	
 		}),
 		puppeteer: {		
 			headless: true,		
@@ -80,7 +80,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 	});
     
 	client.on('remote_session_saved', () => {
-		console.log("[ SESSION ]:", "Successfully saved");
+		console.log("[ SESSION ]:", "✅ Successfully saved");
 	});
 
 	client.on('ready', () => {
