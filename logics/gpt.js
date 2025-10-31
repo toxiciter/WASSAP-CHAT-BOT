@@ -17,7 +17,7 @@ module.exports = {
     const url = event.messageReply?.hasMedia ? await api.getMedia.url(event) : event.hasMedia ? await api.getMedia.url(event) : "";
     
     try {
-      const reply = await gpt(ask, url, senderID, "gpt-4o-mini");
+      const reply = await api.gpt(ask, url, senderID, "gpt-4o-mini");
       await api.sendMessage(reply, event.chatID, event.messageID).then((info) => {
         global.onReply.set(info.messageID, {
           cmdName
@@ -33,7 +33,7 @@ module.exports = {
     const ask = event.body;
     const url = event.messageReply?.hasMedia ? await api.getMedia.url(event) : event.hasMedia ? await api.getMedia.url(event) : "";
     try {
-      const reply = await gpt(ask, url, event.senderID, "gpt-4o-mini");
+      const reply = await api.gpt(ask, url, event.senderID, "gpt-4o-mini");
       await api.sendMessage(reply, event.chatID, event.messageID).then((info) => {
         global.onReply.set(info.messageID, {
           cmdName
@@ -64,8 +64,8 @@ module.exports = {
     if (!ask || ask.length === 0) return;
 
     try {
-      await api.sendMessage("✍️ | Thinking...", event.threadID);
-      const reply = await gpt(ask, url, senderID, "gpt-4o-mini");
+      await api.sendMessage("✍️ | Thinking...", event.chatID);
+      const reply = await api.gpt(ask, url, senderID, "gpt-4o-mini");
       
       await api.sendMessage(reply, event.chatID, event.messageID);
     } catch (error) {
