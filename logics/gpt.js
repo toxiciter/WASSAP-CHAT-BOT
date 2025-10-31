@@ -1,59 +1,75 @@
-const axios = require("axios");
-
 module.exports = {
   config: {
     name: "gpt",
+    version: "2.0",
     author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
-    description: "For conversation with real chatGPT",
+    countDown: 0,
+    description: "Auto reply using chatGPT AI",
     category: "AI",
-    guide: "{pn} [your message]\n{pn} [your message] (with an image)\n{pn} [your message] (With reply of an image)\nexample: {pn} hey ki koro"
+    guide: "gpt on (for chat with chatGPT without prefix or messageReply! if it enable chatGPT will listen all of message you sent)\ngpt off ( for turn off all message listen )\n{pn} [your message]\n{pn} [your message] (with an image)\n{pn} [your message] (with reply of an image)"
   },
 
-  logic: async ({ api, args, event, cmdName }) => {
-    const prompt = args.join(" ") || "hie";
+  activeUsers: new Set(),
+
+  logic: async function ({ api, event, args, cmdName }) {
+    const ask = args.join(" ") || "hie";
+    const senderID = event.senderID;
+    const url = event.messageReply?.hasMedia ? await api.getMedia.url(event) : event.hasMedia ? await api.getMedia.url(event) : "";
+    
     try {
-    let url = "";
-      if (event.message_reply && event.messageReply.hasMedia) {
-        url = await api.getMedia.url(event);
-      } else if (event.hasMedia) {
-        url = await api.getMedia.url(event);
-      };
-    const { data } = await axios.get(
-      `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
-    );
-
-    const msg = await api.sendMessage(data.response, event.chatID, event.messageID);
-
-    global.onReply.set(msg.id._serialized, {
-      cmdName,
-      author: event.senderID
-    });
+      const reply = await gpt(ask, url, senderID, "gpt-4o-mini");
+      await api.sendMessage(reply, event.chatID, event.messageID).then((info) => {
+        global.onReply.set(info.messageID, {
+          cmdName
+        })
+      });
+      
+    } catch (e) {
+     throw e;
+    }
+  },
+  
+  reply: async function ({ api, event, cmdName }) {
+    const ask = event.body;
+    const url = event.messageReply?.hasMedia ? await api.getMedia.url(event) : event.hasMedia ? await api.getMedia.url(event) : "";
+    try {
+      const reply = await gpt(ask, url, event.senderID, "gpt-4o-mini");
+      await api.sendMessage(reply, event.chatID, event.messageID).then((info) => {
+        global.onReply.set(info.messageID, {
+          cmdName
+        })
+      });
+    
     } catch (e) {
       throw e;
     }
   },
 
-  reply: async ({ api, event, cmdName }) => {
+  chat: async function ({ api, event }) {
+    const ask = event.body;
+    const senderID = event.senderID;
+    const url = event.messageReply?.hasMedia ? await api.getMedia.url(event) : event.hasMedia ? await api.getMedia.url(event) : "";
+
+    if (ask?.toLowerCase() === "gpt on") {
+      this.activeUsers.add(senderID);
+      return api.sendMessage("✅ | GPT auto-reply has been enabled for you.", event.chatID, event.messageID);
+    }
+
+    if (ask?.toLowerCase() === "gpt off") {
+      this.activeUsers.delete(senderID);
+      return api.sendMessage("❎ | GPT auto-reply has been disabled for you.", event.chatID, event.messageID);
+    }
+
+    if (!this.activeUsers.has(senderID)) return;
+    if (!ask || ask.length === 0) return;
+
     try {
-    const prompt = event.body;
-    let url = "";
-      if (event.message_reply && event.messageReply.hasMedia) {
-        url = await api.getMedia.url(event);
-      } else if (event.hasMedia) {
-        url = await api.getMedia.url(event);
-      };
-    const { data } = await axios.get(
-      `https://www.noobx.ct.ws/api/gpt-pro?uid=${event.from}&text=${encodeURIComponent(prompt)}&imageUrl=${url}`
-    );
-
-    const msg = await api.sendMessage(data.response, event.chatID, event.messageID);
-
-    global.onReply.set(msg.id._serialized, {
-      cmdName,
-      author: event.senderID
-    });
-    } catch (e) {
-      throw e;
+      await api.sendMessage("✍️ | Thinking...", event.threadID);
+      const reply = await gpt(ask, url, senderID, "gpt-4o-mini");
+      
+      await api.sendMessage(reply, event.chatID, event.messageID);
+    } catch (error) {
+      throw error;
     }
   }
 };
