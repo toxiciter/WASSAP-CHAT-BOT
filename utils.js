@@ -2,6 +2,7 @@ const fs = require("fs");
 const { URL } = require("url");
 const path = require("path");
 const { whiteList } = require(path.join(__dirname, "API", "models", "mongodb.js"));
+const serverUrl = process.env.RENDER_EXTERNAL_URL || `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`;
 
 
 function dataType(input) {
@@ -46,7 +47,7 @@ const getMedia = {
                     }
                 });
             }, 30 * 1000);
-            return "https://wassap-chat-bot-production.up.railway.app/" + fileName;     
+            return serverUrl + "/" + fileName;     
         } catch (e) {                
             throw e;      
         }    
