@@ -1,4 +1,6 @@
 {
+  "pairingPhone": "",
+  "selfListen": true,
   "prefix": "/",
   "domain": "https://wassap-chat-bot.onrender.com",
   "whiteListMode": true
