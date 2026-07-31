@@ -3,5 +3,9 @@
   "selfListen": true,
   "prefix": "/",
   "domain": "https://wassap-chat-bot.onrender.com",
-  "whiteListMode": true
+  "whiteListMode": {
+		"enable": false,
+		"whiteListIds": [],
+		"notes": "if you enable this feature, only the ids in the whiteListIds list can use the bot"
+	}
 }
